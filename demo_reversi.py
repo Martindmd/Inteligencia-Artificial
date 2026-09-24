@@ -10,34 +10,41 @@ Authors:
 from __future__ import annotations  # For Python 3.7
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
-from heuristic import heuristic, Heuristic
-from reversi import (Reversi, from_array_to_dictionary_board,)
-from strategy import (ManualStrategy, MinimaxAlphaBetaStrategy,
-                      MinimaxStrategy, RandomStrategy)
+from heuristic import Heuristic, heuristic
+from reversi import (
+    Reversi,
+    from_array_to_dictionary_board,
+)
+from strategy import (
+    ManualStrategy,
+    MinimaxAlphaBetaStrategy,
+    MinimaxStrategy,
+    RandomStrategy,
+)
 
 player_manual = Player(
-    name='Manual',
+    name="Manual",
     strategy=ManualStrategy(verbose=0),
 )
 
 player_manual2 = Player(
-    name='Manual_2',
+    name="Manual_2",
     strategy=ManualStrategy(verbose=1),
 )
 
 player_random = Player(
-    name='Random',
+    name="Random",
     strategy=RandomStrategy(verbose=0),
     delay=1,
 )
 player_random2 = Player(
-    name='Random_2',
+    name="Random_2",
     strategy=RandomStrategy(verbose=1),
     delay=2,
 )
 
 player_minimax3 = Player(
-    name='Minimax_3',
+    name="Minimax_3",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=3,
@@ -47,7 +54,7 @@ player_minimax3 = Player(
 )
 
 player_minimax4 = Player(
-    name='Minimax_4',
+    name="Minimax_4",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=4,
@@ -57,35 +64,34 @@ player_minimax4 = Player(
 )
 
 player_alphabeta1 = Player(
-    name='AlphaBeta_1',
+    name="AlphaBeta_1",
     strategy=MinimaxAlphaBetaStrategy(
-        heuristic=heuristic,
-        max_depth_minimax=3,
-        verbose=0
-    )
+        heuristic=heuristic, max_depth_minimax=3, verbose=0
+    ),
 )
 
 player_alphabeta2 = Player(
-    name='AlphaBeta_2',
+    name="AlphaBeta_2",
     strategy=MinimaxAlphaBetaStrategy(
-        heuristic=heuristic,
-        max_depth_minimax=4,
-        verbose=0
-    )
+        heuristic=heuristic, max_depth_minimax=4, verbose=0
+    ),
 )
 
 ## If you want to play against one of your heuristics, you should do the following
-from p1_gggg_mm_apellido1_apellido2 import Solution1  # import your StudentHeuristic here
-my_heuristic = Solution1() # instantiate your heuristic here
+from p1_1311_09_Marmolejo_Olsson import Solution1  # import your StudentHeuristic here
+
+my_heuristic = Solution1()  # instantiate your heuristic here
 my_player = Player(
     name=my_heuristic.get_name(),
     strategy=MinimaxStrategy(  # MinimaxAlphaBetaStrategy(
-        heuristic=Heuristic(name=my_heuristic.get_name(), 
-                            evaluation_function=my_heuristic.evaluation_function),
+        heuristic=Heuristic(
+            name=my_heuristic.get_name(),
+            evaluation_function=my_heuristic.evaluation_function,
+        ),
         max_depth_minimax=3,
         max_sec_per_evaluation=0.5,
-        verbose=0
-    )
+        verbose=0,
+    ),
 )
 
 
@@ -109,22 +115,10 @@ E.g., it can be an intermediate state.
 initial_player = player_a  # Player who moves first.
 
 # Board at an intermediate state of the game.
-intermediate_board = (
-    ['..B.B..',
-     '.WBBW..',
-     'WBWBB..',
-     '.W.WWW.',
-     '.BBWBWB']
-)
+intermediate_board = ["..B.B..", ".WBBW..", "WBWBB..", ".W.WWW.", ".BBWBWB"]
 
 # board with obstacles
-obstacle_board = (
-    ['.OB.B..',
-     '.WBBW..',
-     'WBWBB..',
-     '.W.WWWO',
-     '.BBWBWB']
-)
+obstacle_board = [".OB.B..", ".WBBW..", "WBWBB..", ".W.WWWO", ".BBWBWB"]
 
 initial_board = intermediate_board
 # NOTE Uncoment to use an initial board with obstacles:
@@ -141,7 +135,7 @@ else:
     try:
         initial_board = from_array_to_dictionary_board(initial_board)
     except ValueError:
-        raise ValueError('Wrong configuration of the board')
+        raise ValueError("Wrong configuration of the board")
     else:
         print("Successfully initialised board from array")
 
@@ -171,4 +165,4 @@ match = TwoPlayerMatch(
 # Play match
 scores = match.play_match()
 
-input('Press any key to finish.')
+input("Press any key to finish.")
