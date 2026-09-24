@@ -37,6 +37,7 @@ player_random = Player(
     strategy=RandomStrategy(verbose=0),
     delay=1,
 )
+
 player_random2 = Player(
     name="Random_2",
     strategy=RandomStrategy(verbose=1),
@@ -78,7 +79,7 @@ player_alphabeta2 = Player(
 )
 
 ## If you want to play against one of your heuristics, you should do the following
-from p1_1311_09_Marmolejo_Olsson import Solution1  # import your StudentHeuristic here
+from p1_1311_09_olsson_marmolejo import Solution1  # import your StudentHeuristic here
 
 my_heuristic = Solution1()  # instantiate your heuristic here
 my_player = Player(
