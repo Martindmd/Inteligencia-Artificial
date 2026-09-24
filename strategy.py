@@ -1,16 +1,15 @@
 """Strategies for two player games.
 
-   Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin Kouki <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+     Fabiano Baroni <fabiano.baroni@uam.es>,
+     Alejandro Bellogin Kouki <alejandro.bellogin@uam.es>
+     Alberto Suárez <alberto.suarez@uam.es>
 """
 
 from __future__ import annotations  # For Python 3.7
 
-from abc import ABC, abstractmethod
 import time
-from typing import List
+from abc import ABC, abstractmethod
 
 import numpy as np
 
@@ -36,7 +35,7 @@ class Strategy(ABC):
     def generate_successors(
         self,
         state: TwoPlayerGameState,
-    ) -> List[TwoPlayerGameState]:
+    ) -> list[TwoPlayerGameState]:
         """Generate state successors."""
         assert isinstance(state.game, TwoPlayerGame)
         successors = state.game.generate_successors(state)
@@ -77,7 +76,7 @@ class ManualStrategy(Strategy):
         next_state = successors[index_successor]
 
         if self.verbose > 0:
-            print('My move is: {:s}'.format(str(next_state.move_code)))
+            print(f"My move is: {next_state.move_code!s:s}")
 
         return next_state
 
@@ -112,10 +111,10 @@ class MinimaxStrategy(Strategy):
 
         if self.verbose > 0:
             if self.verbose > 1:
-                print('\nGame state before move:\n')
+                print("\nGame state before move:\n")
                 print(state.board)
                 print()
-            print('Minimax value = {:.2g}'.format(minimax_value))
+            print(f"Minimax value = {minimax_value:.2g}")
 
         return minimax_successor
 
@@ -134,8 +133,12 @@ class MinimaxStrategy(Strategy):
                 minimax_value = self.heuristic.evaluate(state)
                 time1 = time.time()
                 timediff = time1 - time0
-                if (self.max_sec_per_evaluation > 0) and (timediff > self.max_sec_per_evaluation):
-                    print("Heuristic {} timeout: {} > {}".format(self.heuristic.get_name(), timediff, self.max_sec_per_evaluation))
+                if (self.max_sec_per_evaluation > 0) and (
+                    timediff > self.max_sec_per_evaluation
+                ):
+                    print(
+                        f"Heuristic {self.heuristic.get_name()} timeout: {timediff} > {self.max_sec_per_evaluation}"
+                    )
                     self.timed_out = True
             minimax_successor = None
         else:
@@ -143,19 +146,19 @@ class MinimaxStrategy(Strategy):
 
             for successor in self.generate_successors(state):
                 if self.verbose > 1:
-                    print('{}: {}'.format(state.board, minimax_value))
+                    print(f"{state.board}: {minimax_value}")
 
                 successor_minimax_value, _ = self._max_value(
                     successor,
                     depth - 1,
                 )
 
-                if (successor_minimax_value < minimax_value):
+                if successor_minimax_value < minimax_value:
                     minimax_value = successor_minimax_value
                     minimax_successor = successor
 
         if self.verbose > 1:
-            print('{}: {}'.format(state.board, minimax_value))
+            print(f"{state.board}: {minimax_value}")
 
         return minimax_value, minimax_successor
 
@@ -174,8 +177,12 @@ class MinimaxStrategy(Strategy):
                 minimax_value = self.heuristic.evaluate(state)
                 time1 = time.time()
                 timediff = time1 - time0
-                if (self.max_sec_per_evaluation > 0) and (timediff > self.max_sec_per_evaluation):
-                    print("Heuristic {} timeout: {} > {}".format(self.heuristic.get_name(), timediff, self.max_sec_per_evaluation))
+                if (self.max_sec_per_evaluation > 0) and (
+                    timediff > self.max_sec_per_evaluation
+                ):
+                    print(
+                        f"Heuristic {self.heuristic.get_name()} timeout: {timediff} > {self.max_sec_per_evaluation}"
+                    )
                     self.timed_out = True
             minimax_successor = None
         else:
@@ -183,18 +190,18 @@ class MinimaxStrategy(Strategy):
 
             for successor in self.generate_successors(state):
                 if self.verbose > 1:
-                    print('{}: {}'.format(state.board, minimax_value))
+                    print(f"{state.board}: {minimax_value}")
 
                 successor_minimax_value, _ = self._min_value(
                     successor,
                     depth - 1,
                 )
-                if (successor_minimax_value > minimax_value):
+                if successor_minimax_value > minimax_value:
                     minimax_value = successor_minimax_value
                     minimax_successor = successor
 
         if self.verbose > 1:
-            print('{}: {}'.format(state.board, minimax_value))
+            print(f"{state.board}: {minimax_value}")
 
         return minimax_value, minimax_successor
 

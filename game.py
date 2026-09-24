@@ -1,33 +1,33 @@
 """Infrastructure for two-player games.
 
-    Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin Kouki <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+    Fabiano Baroni <fabiano.baroni@uam.es>,
+    Alejandro Bellogin Kouki <alejandro.bellogin@uam.es>
+    Alberto Suárez <alberto.suarez@uam.es>
 """
 
 from __future__ import annotations  # For Python 3.7
 
+import _thread
 import copy
+import threading
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+from contextlib import contextmanager
 from tkinter import Frame, Tk, messagebox
-from typing import Any, Callable, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
-import _thread
-import threading
-from contextlib import contextmanager
 
-
-class Player(object):
+class Player:
     """Player properties."""
 
     def __init__(
         self,
         name: str,
-        strategy: "Strategy",
+        strategy: Strategy,
         delay: int = 0,
     ) -> None:
         self.label: Any = None
@@ -46,23 +46,23 @@ class Player(object):
         return self.strategy.next_move(state, gui)
 
 
-class TwoPlayerGameState(object):
+class TwoPlayerGameState:
     """State of a two-player game."""
 
     def __init__(
         self,
-        game: Optional[TwoPlayerGame] = None,
-        initial_player: Optional[Player] = None,
-        player_max: Optional[Player] = None,
+        game: TwoPlayerGame | None = None,
+        initial_player: Player | None = None,
+        player_max: Player | None = None,
         board: Any = None,
         move_code: Any = None,
-        parent: Optional[TwoPlayerGameState] = None,
+        parent: TwoPlayerGameState | None = None,
     ) -> None:
         self.game = game
         self.player_max = player_max
         self.next_player = initial_player
-        self.end_of_game: Optional[bool] = None
-        self.scores: Optional[np.ndarray] = None
+        self.end_of_game: bool | None = None
+        self.scores: np.ndarray | None = None
         self.board = board
         self.move_code = move_code
         self.parent = parent
@@ -98,6 +98,7 @@ class TwoPlayerGameState(object):
         if self.board is None:
             self.board = self.game.initialize_board()
         if gui:
+
             class GuiThread(threading.Thread):
                 def __init__(self, game: TwoPlayerGame, board: Any):
                     threading.Thread.__init__(self)
@@ -118,11 +119,15 @@ class TwoPlayerGameState(object):
                             self.gui_root.destroy()
                             self.gui_root.quit()
                             self.gui_root = None
+
                     self.gui_root.protocol("WM_DELETE_WINDOW", on_closing)
                     self.gui_frame = Frame(self.gui_root)
                     self.gui_frame.pack()
-                    self.gui_buttons = self.game.initialize_buttons(self.board, self.gui_frame)
+                    self.gui_buttons = self.game.initialize_buttons(
+                        self.board, self.gui_frame
+                    )
                     self.gui_root.mainloop()
+
             self.gui_thread = GuiThread(self.game, self.board)
             self.gui_frame = self.gui_thread.gui_frame
             self.gui_root = self.gui_thread.gui_root
@@ -192,11 +197,13 @@ class TwoPlayerGameState(object):
         if gui:
             self.gui_root = self.gui_thread.gui_root
             self.gui_buttons = self.gui_thread.gui_buttons
-            self.game.gui_update(state=next_state,
-                                 gui_buttons=self.gui_buttons,
-                                 gui_root=self.gui_root,
-                                 moves=[],
-                                 click_function=None)
+            self.game.gui_update(
+                state=next_state,
+                gui_buttons=self.gui_buttons,
+                gui_root=self.gui_root,
+                moves=[],
+                click_function=None,
+            )
         assert isinstance(self.game, TwoPlayerGame)
         assert isinstance(self.player_max, Player)
 
@@ -233,27 +240,26 @@ class TwoPlayerGame(ABC):
         elif player.label == self.player2.label:
             player = self.player1
         else:
-            raise Exception('The opponent has to be one of the players')
+            raise Exception("The opponent has to be one of the players")
 
         return player
 
-    def manual_input(self, successors: List[TwoPlayerGameState]) -> int:
+    def manual_input(self, successors: list[TwoPlayerGameState]) -> int:
         """Get move from user input."""
-        moves = ''
+        moves = ""
         for n, successor in enumerate(successors):
-            moves = moves + '{:d}: {}  '.format(n, successor.move_code)
+            moves = moves + f"{n:d}: {successor.move_code}  "
         print(moves)
 
         min_index_successor = 0
         max_index_successor = len(successors) - 1
-        error_msg = 'Enter a number between {} and {}'.format(
-            min_index_successor,
-            max_index_successor
+        error_msg = (
+            f"Enter a number between {min_index_successor} and {max_index_successor}"
         )
 
         while True:
             try:
-                index_successor = int(input('Enter your move: '))
+                index_successor = int(input("Enter your move: "))
             except ValueError:
                 print(error_msg)
             else:
@@ -267,8 +273,9 @@ class TwoPlayerGame(ABC):
 
         return index_successor
 
-    def graphical_input(self, state: TwoPlayerGameState,
-                        successors: List[TwoPlayerGameState]) -> int:
+    def graphical_input(
+        self, state: TwoPlayerGameState, successors: list[TwoPlayerGameState]
+    ) -> int:
         """Get move from GUI."""
         if state.end_of_game:
             return -1
@@ -280,17 +287,22 @@ class TwoPlayerGame(ABC):
             return index_successor
 
         next_move = None
+
         def get_move(move):
             nonlocal next_move
             next_move = move
 
         gui_root = state.gui_thread.gui_root
         gui_buttons = state.gui_thread.gui_buttons
-        self.gui_update(state=state, gui_buttons=gui_buttons,
-                        gui_root=gui_root, moves=moves,
-                        click_function=get_move)
+        self.gui_update(
+            state=state,
+            gui_buttons=gui_buttons,
+            gui_root=gui_root,
+            moves=moves,
+            click_function=get_move,
+        )
 
-        print('waiting for click...')
+        print("waiting for click...")
         while next_move is None:
             time.sleep(0.1)
 
@@ -303,52 +315,54 @@ class TwoPlayerGame(ABC):
     def display(self, state: TwoPlayerGameState, gui: bool = False) -> None:
         """Display the game state."""
         if state.move_code:
-            print('\nPlayer \'{:s}\' [{:s}] moves {:s}.\n'.format(
-                state.previous_player.name,
-                str(state.previous_player.label),
-                str(state.move_code),
-            ))
+            print(
+                f"\nPlayer '{state.previous_player.name:s}' [{state.previous_player.label!s:s}] moves {state.move_code!s:s}.\n"
+            )
 
     @abstractmethod
     def initialize_board(self) -> Any:
         """Initialize board with standard configuration."""
-        pass
 
     @abstractmethod
     def initialize_buttons(self, board: Any, gui_frame: Frame) -> dict:
         pass
 
     @abstractmethod
-    def gui_update(self, state: TwoPlayerGameState, gui_buttons: dict,
-                   gui_root: Tk, moves: list = [],
-                   click_function: Callable[[Any], None] = None) -> None:
+    def gui_update(
+        self,
+        state: TwoPlayerGameState,
+        gui_buttons: dict,
+        gui_root: Tk,
+        moves: list = [],
+        click_function: Callable[[Any], None] = None,
+    ) -> None:
         pass
 
     @abstractmethod
     def generate_successors(
         self,
         state: TwoPlayerGameState,
-    ) -> List[TwoPlayerGameState]:
+    ) -> list[TwoPlayerGameState]:
         """Generate the list of successors of a game state."""
-        pass
+
     #   NOTE return list of successors
 
     @abstractmethod
     def score(
         self,
         state: TwoPlayerGameState,
-    ) -> Tuple[bool, Optional[np.ndarray]]:
+    ) -> tuple[bool, np.ndarray | None]:
         """Determine whether a game is terminal and score a game."""
-        pass
+
     #   NOTE return end_of_game and scores
 
 
-class TwoPlayerMatch(object):
+class TwoPlayerMatch:
     """Infrastructure for a match between two players."""
 
     def __init__(
         self,
-        initial_state: Optional[TwoPlayerGameState] = None,
+        initial_state: TwoPlayerGameState | None = None,
         n_moves_max: int = 500,
         max_seconds_per_move: float = 5,
         gui: bool = False,
@@ -381,52 +395,46 @@ class TwoPlayerMatch(object):
             # if the action ends in specified time, timer is canceled
             timer.cancel()
 
-    def play_match(self) -> Optional[np.ndarray]:
+    def play_match(self) -> np.ndarray | None:
         """Play a match."""
-        if (self.initial_state is None):
-            raise ValueError('Please, provide an initial state')
+        if self.initial_state is None:
+            raise ValueError("Please, provide an initial state")
 
         state = self.initial_state.setup_match(self.gui)
-        if (self._verbose > 0):
-            print('\nLet\'s play %s!\n' % (self.initial_state.game.name))
+        if self._verbose > 0:
+            print("\nLet's play %s!\n" % (self.initial_state.game.name))
             if self._verbose != 3:
-                input('Press any key to start playing. ')
+                input("Press any key to start playing. ")
 
         n_moves = 0
         while (n_moves < self.n_moves_max) and not state.end_of_game:
-
             strategy = state.next_player.strategy
 
             # NOTE <alberto.suarez@uam.es> Ugly hack.
             is_next_player_manual = (
-                (strategy.__class__.__module__, strategy.__class__.__name__)
-                == ('strategy', 'ManualStrategy')
-            )
+                strategy.__class__.__module__,
+                strategy.__class__.__name__,
+            ) == ("strategy", "ManualStrategy")
 
-            if (is_next_player_manual or self._verbose > 0):
+            if is_next_player_manual or self._verbose > 0:
                 state.display(self.gui)
-                message = (
-                    'It is the turn of player \'{:s}\' [{:s}].\n'.format(
-                        state.next_player.name,
-                        str(state.next_player.label)
-                    )
-                )
+                message = f"It is the turn of player '{state.next_player.name:s}' [{state.next_player.label!s:s}].\n"
                 print(message)
 
-            if (strategy.verbose > 0 and strategy.verbose != 3):
+            if strategy.verbose > 0 and strategy.verbose != 3:
                 user_input = input(
                     'Press "s" to save the state of the game, '
-                    + 'any other key to continue. '
+                    + "any other key to continue. "
                 )
-                if (user_input.lower() == 's'):
-                    file_name = input('Input a file name: ')
-                    f = open(file_name, 'a')
+                if user_input.lower() == "s":
+                    file_name = input("Input a file name: ")
+                    f = open(file_name, "a")
                     f.write(message)
-                    f.write('\nThe state of the board is:\n')
+                    f.write("\nThe state of the board is:\n")
                     f.write(str(state.board))
-                    f.write('\n\n\n')
+                    f.write("\n\n\n")
                     f.close()
-                    user_input = input('Press any key to continue. ')
+                    user_input = input("Press any key to continue. ")
 
                 print()
 
@@ -437,7 +445,10 @@ class TwoPlayerMatch(object):
                 finished = True
 
             if not finished:
-                print("Match cancelled because player %s as %s used too much time" % (state.next_player.name, state.next_player.label))
+                print(
+                    "Match cancelled because player %s as %s used too much time"
+                    % (state.next_player.name, state.next_player.label)
+                )
                 scores = np.zeros(2, dtype=float)
                 if state.next_player == state.player1:
                     scores[0] = -1
@@ -450,26 +461,19 @@ class TwoPlayerMatch(object):
         if self._verbose > 0:
             state.display(self.gui)
 
-            print('Game over.\n')
+            print("Game over.\n")
 
         if state.scores is None:
-            raise Warning('Score cannot be computed.')
+            raise Warning("Score cannot be computed.")
         else:
             if self._verbose > 0:
                 print(
-                    'Player {:s} [{:s}]: {:g}\nPlayer {:s} [{:s}]: {:g}\n'.format(
-                        state.game.player1.name,
-                        str(state.game.player1.label),
-                        state.scores[0],
-                        str(state.game.player2.name),
-                        str(state.game.player2.label),
-                        state.scores[1],
-                    ),
+                    f"Player {state.game.player1.name:s} [{state.game.player1.label!s:s}]: {state.scores[0]:g}\nPlayer {state.game.player2.name!s:s} [{state.game.player2.label!s:s}]: {state.scores[1]:g}\n",
                 )
 
         if (n_moves == self.n_moves_max) and not state.end_of_game:
             raise Warning(
-                'Game did not finish in {:d} moves.\n'.format(self.n_moves_max),
+                f"Game did not finish in {self.n_moves_max:d} moves.\n",
             )
 
         return state.scores
