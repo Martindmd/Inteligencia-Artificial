@@ -1,8 +1,9 @@
 """Illustration of a match for a game tree.
 
-    Author:
-        Alberto Suárez <alberto.suarez@uam.es>
+Author:
+    Alberto Suárez <alberto.suarez@uam.es>
 """
+
 from __future__ import annotations  # For Python 3.7
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
@@ -16,7 +17,7 @@ from strategy import (
 # Define players
 
 player1_minimax = Player(
-    name='Minimax 1',
+    name="Minimax 1",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=4,
@@ -25,7 +26,7 @@ player1_minimax = Player(
 )
 
 player2_minimax = Player(
-    name='Minimax 4',
+    name="Minimax 4",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=4,
@@ -34,7 +35,7 @@ player2_minimax = Player(
 )
 
 player1_minimax_alpha_beta = Player(
-    name='Minimax + alpha-beta 1',
+    name="Minimax + alpha-beta 1",
     strategy=MinimaxAlphaBetaStrategy(
         heuristic=heuristic,
         max_depth_minimax=4,
@@ -44,7 +45,7 @@ player1_minimax_alpha_beta = Player(
 
 
 player2_minimax_alpha_beta = Player(
-    name='Minimax + alpha-beta 2',
+    name="Minimax + alpha-beta 2",
     strategy=MinimaxAlphaBetaStrategy(
         heuristic=heuristic,
         max_depth_minimax=4,
@@ -76,7 +77,7 @@ initial_player = player1
 game_state = TwoPlayerGameState(
     game=game,
     initial_player=initial_player,
-    board='A',
+    board="A",
 )
 
 match = TwoPlayerMatch(

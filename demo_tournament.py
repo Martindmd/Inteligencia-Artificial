@@ -11,16 +11,15 @@ import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
 from heuristic import simple_evaluation_function
-from tictactoe import TicTacToe
 from reversi import (
     Reversi,
     from_array_to_dictionary_board,
 )
+from tictactoe import TicTacToe
 from tournament import StudentHeuristic, Tournament
 
 
 class Heuristic1(StudentHeuristic):
-
     def get_name(self) -> str:
         return "dummy"
 
@@ -33,7 +32,6 @@ class Heuristic1(StudentHeuristic):
 
 
 class Heuristic2(StudentHeuristic):
-
     def get_name(self) -> str:
         return "random"
 
@@ -42,7 +40,6 @@ class Heuristic2(StudentHeuristic):
 
 
 class Heuristic3(StudentHeuristic):
-
     def get_name(self) -> str:
         return "heuristic"
 
@@ -55,13 +52,7 @@ def create_reversi_match(player1: Player, player2: Player) -> TwoPlayerMatch:
     initial_board = None
     initial_player = player1
 
-    initial_board = (
-        ['..B.B..',
-         '.WBBW..',
-         'WBWBB..',
-         '.W.WWW.',
-         '.BBWBWB']
-    )
+    initial_board = ["..B.B..", ".WBBW..", "WBWBB..", ".W.WWW.", ".BBWBWB"]
 
     if initial_board is None:
         height, width = 8, 8
@@ -71,7 +62,7 @@ def create_reversi_match(player1: Player, player2: Player) -> TwoPlayerMatch:
         try:
             initial_board = from_array_to_dictionary_board(initial_board)
         except ValueError:
-            raise ValueError('Wrong configuration of the board')
+            raise ValueError("Wrong configuration of the board")
         else:
             print("Successfully initialised board from array")
 
@@ -120,7 +111,7 @@ create_match = create_reversi_match
 tour = Tournament(max_depth=3, init_match=create_match, max_evaluation_time=0.5)
 
 # if the strategies are copy-pasted here:
-strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
+strats = {"opt1": [Heuristic1], "opt2": [Heuristic2], "opt3": [Heuristic3]}
 # if the strategies should be loaded from files in a specific folder:
 # folder_name = "folder_strat" # name of the folder where the strategy files are located
 # strats = tour.load_strategies_from_folder(folder=folder_name, max_strat=3)
@@ -134,22 +125,22 @@ scores, totals, names = tour.run(
 )
 
 print(
-    'Results for tournament where each game is repeated '
-    + '%d=%dx2 times, alternating colors for each player' % (2 * n, n),
+    "Results for tournament where each game is repeated "
+    + "%d=%dx2 times, alternating colors for each player" % (2 * n, n),
 )
 
 # print(totals)
 # print(scores)
 
-print('\ttotal:', end='')
+print("\ttotal:", end="")
 for name1 in names:
-    print('\t%s' % (name1), end='')
+    print("\t%s" % (name1), end="")
 print()
 for name1 in names:
-    print('%s\t%d:' % (name1, totals[name1]), end='')
+    print("%s\t%d:" % (name1, totals[name1]), end="")
     for name2 in names:
         if name1 == name2 or name2 not in scores[name1]:
-            print('\t---', end='')
+            print("\t---", end="")
         else:
-            print('\t%d' % (scores[name1][name2]), end='')
+            print("\t%d" % (scores[name1][name2]), end="")
     print()

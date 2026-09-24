@@ -1,16 +1,17 @@
 """Implementation of Reversi.
 
-    Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+    Fabiano Baroni <fabiano.baroni@uam.es>,
+    Alejandro Bellogin <alejandro.bellogin@uam.es>
+    Alberto Suárez <alberto.suarez@uam.es>
 """
 
 from __future__ import annotations  # For Python 3.7
 
 import copy
-from tkinter import Tk, Frame, Label, Button, DISABLED, NORMAL
-from typing import Any, Callable, List, Optional, Tuple
+from collections.abc import Callable
+from tkinter import DISABLED, NORMAL, Button, Frame, Label, Tk
+from typing import Any
 
 import numpy as np
 
@@ -20,8 +21,8 @@ from game import Player, TwoPlayerGame, TwoPlayerGameState
 def create_standard_board(height, width, player1_label, player2_label) -> dict:
     initial_x = width // 2
     initial_y = height // 2
-    init_white_pos = [(initial_x, initial_y), (initial_x+1, initial_y+1)]
-    init_black_pos = [(initial_x, initial_y+1), (initial_x+1, initial_y)]
+    init_white_pos = [(initial_x, initial_y), (initial_x + 1, initial_y + 1)]
+    init_black_pos = [(initial_x, initial_y + 1), (initial_x + 1, initial_y)]
     init_white_board = dict.fromkeys(init_white_pos, player2_label)
     init_black_board = dict.fromkeys(init_black_pos, player1_label)
     board = {**init_white_board, **init_black_board}
@@ -37,12 +38,15 @@ def from_array_to_dictionary_board(board_array):
     n_columns = len(board_array[0])
     try:
         board_dictionary = dict(
-            [((j + 1, i + 1), board_array[i][j])
-             for i in range(n_rows) for j in range(n_columns)
-             if board_array[i][j] != '.']
+            [
+                ((j + 1, i + 1), board_array[i][j])
+                for i in range(n_rows)
+                for j in range(n_columns)
+                if board_array[i][j] != "."
+            ]
         )
     except IndexError:
-        raise IndexError('Wrong configuration of the board')
+        raise IndexError("Wrong configuration of the board")
     else:
         return board_dictionary
 
@@ -52,23 +56,33 @@ def from_dictionary_to_array_board(board_dictionary, height, width):
     board_array = []
 
     for i in range(height):
-        board_array.append('')
+        board_array.append("")
         for j in range(width):
-            key =  (j + 1, i + 1)
+            key = (j + 1, i + 1)
             if key in board_dictionary:
                 board_array[i] += board_dictionary[key]
             else:
-                board_array[i] += '.'
+                board_array[i] += "."
 
     return board_array
 
 
-def capture_enemy_in_dir(board: dict, move, delta_x_y, player_label: Any, enemy_label: Any, blocked_cell_label: Any, ignore_block_cells_in_captures: bool) -> list:
+def capture_enemy_in_dir(
+    board: dict,
+    move,
+    delta_x_y,
+    player_label: Any,
+    enemy_label: Any,
+    blocked_cell_label: Any,
+    ignore_block_cells_in_captures: bool,
+) -> list:
     (delta_x, delta_y) = delta_x_y
     x, y = move
     x, y = x + delta_x, y + delta_y
     enemy_list_0 = []
-    while board.get((x, y)) == enemy_label or (board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures):
+    while board.get((x, y)) == enemy_label or (
+        board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
+    ):
         enemy_list_0.append((x, y))
         x, y = x + delta_x, y + delta_y
     if board.get((x, y)) != player_label:
@@ -76,7 +90,9 @@ def capture_enemy_in_dir(board: dict, move, delta_x_y, player_label: Any, enemy_
     x, y = move
     x, y = x - delta_x, y - delta_y
     enemy_list_1 = []
-    while board.get((x, y)) == enemy_label or (board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures):
+    while board.get((x, y)) == enemy_label or (
+        board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
+    ):
         enemy_list_1.append((x, y))
         x, y = x - delta_x, y - delta_y
     if board.get((x, y)) != player_label:
@@ -84,32 +100,89 @@ def capture_enemy_in_dir(board: dict, move, delta_x_y, player_label: Any, enemy_
     return enemy_list_0 + enemy_list_1
 
 
-def enemy_captured_by_move(board: dict, move, player_label: Any, enemy_label: Any, blocked_cell_label: Any, ignore_block_cells_in_captures: bool) -> list:
-    return capture_enemy_in_dir(board, move, (0, 1), player_label, enemy_label, blocked_cell_label, ignore_block_cells_in_captures) \
-            + capture_enemy_in_dir(board, move, (1, 0), player_label, enemy_label, blocked_cell_label, ignore_block_cells_in_captures) \
-            + capture_enemy_in_dir(board, move, (1, -1), player_label, enemy_label, blocked_cell_label, ignore_block_cells_in_captures) \
-            + capture_enemy_in_dir(board, move, (1, 1), player_label, enemy_label, blocked_cell_label, ignore_block_cells_in_captures)
+def enemy_captured_by_move(
+    board: dict,
+    move,
+    player_label: Any,
+    enemy_label: Any,
+    blocked_cell_label: Any,
+    ignore_block_cells_in_captures: bool,
+) -> list:
+    return (
+        capture_enemy_in_dir(
+            board,
+            move,
+            (0, 1),
+            player_label,
+            enemy_label,
+            blocked_cell_label,
+            ignore_block_cells_in_captures,
+        )
+        + capture_enemy_in_dir(
+            board,
+            move,
+            (1, 0),
+            player_label,
+            enemy_label,
+            blocked_cell_label,
+            ignore_block_cells_in_captures,
+        )
+        + capture_enemy_in_dir(
+            board,
+            move,
+            (1, -1),
+            player_label,
+            enemy_label,
+            blocked_cell_label,
+            ignore_block_cells_in_captures,
+        )
+        + capture_enemy_in_dir(
+            board,
+            move,
+            (1, 1),
+            player_label,
+            enemy_label,
+            blocked_cell_label,
+            ignore_block_cells_in_captures,
+        )
+    )
 
 
-def get_valid_moves(board: dict, height: int, width: int, player_label: Any, enemy_label: Any, blocked_cell_label: Any, ignore_block_cells_in_captures: bool) -> list:
+def get_valid_moves(
+    board: dict,
+    height: int,
+    width: int,
+    player_label: Any,
+    enemy_label: Any,
+    blocked_cell_label: Any,
+    ignore_block_cells_in_captures: bool,
+) -> list:
     """Returns a list of valid moves for the player judging from the board."""
     # Get all positions adjacent to existing pieces
     candidates = set()
     # Check all 8 directions around each occupied position
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0),
-                    (1, 1), (1, -1), (-1, 1), (-1, -1)]
-    for (x, y) in board.keys():
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+    for x, y in board:
         for dx, dy in directions:
             adj_x, adj_y = x + dx, y + dy
             # Only consider positions within board bounds and not occupied
-            if (1 <= adj_x <= width and
-                1 <= adj_y <= height and
-                    (adj_x, adj_y) not in board):
+            if (
+                1 <= adj_x <= width
+                and 1 <= adj_y <= height
+                and (adj_x, adj_y) not in board
+            ):
                 candidates.add((adj_x, adj_y))
     # Now check only these candidate positions for valid moves
     valid_moves = []
     for pos in candidates:
-        if enemy_captured_by_move(board, pos, player_label, enemy_label, blocked_cell_label, ignore_block_cells_in_captures):
+        if enemy_captured_by_move(
+            board,
+            pos,
+            player_label,
+            enemy_label,
+            blocked_cell_label,
+            ignore_block_cells_in_captures,
+        ):
             valid_moves.append(pos)
 
     return valid_moves
@@ -131,45 +204,82 @@ class Reversi(TwoPlayerGame):
             player1,
             player2,
         )
-        self.player1.label = 'B'
-        self.player2.label = 'W'
-        self.blocked_cell_label = 'O'
+        self.player1.label = "B"
+        self.player2.label = "W"
+        self.blocked_cell_label = "O"
         self.height = height
         self.width = width
-        self.max_score = height*width
-        self.min_score = - self.max_score
+        self.max_score = height * width
+        self.min_score = -self.max_score
         self.ignore_block_cells_in_captures = ignore_block_cells_in_captures
 
     # Private functions
     def _enemy_captured_by_move(self, board: dict, move, player_label: Any) -> list:
-        enemy = self.player2.label if player_label == self.player1.label else self.player1.label
-        return enemy_captured_by_move(board, move, player_label, enemy, self.blocked_cell_label, self.ignore_block_cells_in_captures)
+        enemy = (
+            self.player2.label
+            if player_label == self.player1.label
+            else self.player1.label
+        )
+        return enemy_captured_by_move(
+            board,
+            move,
+            player_label,
+            enemy,
+            self.blocked_cell_label,
+            self.ignore_block_cells_in_captures,
+        )
 
     def _get_valid_moves(self, board: dict, player_label: Any) -> list:
-        enemy = self.player2.label if player_label == self.player1.label else self.player1.label
-        return get_valid_moves(board, self.height, self.width, player_label, enemy, self.blocked_cell_label, self.ignore_block_cells_in_captures)
+        enemy = (
+            self.player2.label
+            if player_label == self.player1.label
+            else self.player1.label
+        )
+        return get_valid_moves(
+            board,
+            self.height,
+            self.width,
+            player_label,
+            enemy,
+            self.blocked_cell_label,
+            self.ignore_block_cells_in_captures,
+        )
 
     def _player_coins(self, board: dict, player_label: Any) -> float:
         return sum(x == player_label for x in board.values())
 
     def _coin_diff(self, board: dict) -> float:
         """Difference in the number of coins."""
-        return 100 * (self._player_coins(board, self.player2.label) -
-                      self._player_coins(board, self.player1.label)) / len(board)
+        return (
+            100
+            * (
+                self._player_coins(board, self.player2.label)
+                - self._player_coins(board, self.player1.label)
+            )
+            / len(board)
+        )
 
     def _choice_diff(self, board: dict) -> float:
         """Difference in the number of choices available."""
         black_moves_num = len(self._get_valid_moves(board, self.player1.label))
         white_moves_num = len(self._get_valid_moves(board, self.player2.label))
         if (black_moves_num + white_moves_num) != 0:
-            return 100 * (black_moves_num - white_moves_num) / (black_moves_num + white_moves_num)
+            return (
+                100
+                * (black_moves_num - white_moves_num)
+                / (black_moves_num + white_moves_num)
+            )
         else:
             return 0
 
     def _corner_diff(self, board: dict) -> float:
         """Difference in the number of corners captured."""
-        corner = [board.get((1, 1)), board.get((1, self.height)), board.get((self.width, 1)),
-                  board.get((self.width, self.height))]
+        corner = [
+            board.get((1, 1)),
+            board.get((1, self.height)),
+            board.get((self.width, 1)),
+            board.get((self.width, self.height)),
+        ]
         black_corner = corner.count(self.player1.label)
         white_corner = corner.count(self.player2.label)
         if (black_corner + white_corner) != 0:
@@ -183,7 +293,9 @@ class Reversi(TwoPlayerGame):
 
     def initialize_board(self) -> dict:
         """Initialize board with standard configuration."""
-        return create_standard_board(self.height, self.width, self.player1.label, self.player2.label)
+        return create_standard_board(
+            self.height, self.width, self.player1.label, self.player2.label
+        )
 
     def display(self, state: TwoPlayerGameState, gui: bool = False) -> None:
         """Display state of the board."""
@@ -193,44 +305,62 @@ class Reversi(TwoPlayerGame):
 
         # Console display
 
-        print('coins: %s=%d <-> %s=%d' % (self.player1.label, self._player_coins(board, self.player1.label),
-                                        self.player2.label, self._player_coins(board, self.player2.label)))
-        for y in range(0, self.height + 1):
-            for x in range(0, self.width + 1):
+        print(
+            "coins: %s=%d <-> %s=%d"
+            % (
+                self.player1.label,
+                self._player_coins(board, self.player1.label),
+                self.player2.label,
+                self._player_coins(board, self.player2.label),
+            )
+        )
+        for y in range(self.height + 1):
+            for x in range(self.width + 1):
                 if x > 0 and y > 0:
                     if (x, y) in moves:
-                        print(board.get((x, y), '_',), end=' ')
+                        print(
+                            board.get(
+                                (x, y),
+                                "_",
+                            ),
+                            end=" ",
+                        )
                     else:
-                        print(board.get((x, y), '.',), end=' ')
+                        print(
+                            board.get(
+                                (x, y),
+                                ".",
+                            ),
+                            end=" ",
+                        )
                 if x == 0:
                     if y > 0:
-                        print(y, end=' ')
+                        print(y, end=" ")
                 if y == 0:
-                    print(chr(x+96), end=' ') if x > 0 else print(' ', end=' ')
+                    print(chr(x + 96), end=" ") if x > 0 else print(" ", end=" ")
             print()
         print()
 
         # GUI display
         if gui:
-            moves = [
-                self._matrix_to_display_coordinates(move) for move in moves
-            ]
+            moves = [self._matrix_to_display_coordinates(move) for move in moves]
             gui_root = state.gui_thread.gui_root
             gui_buttons = state.gui_thread.gui_buttons
-            state.game.gui_update(state=state, gui_buttons=gui_buttons,
-                                  gui_root=gui_root, moves=moves,
-                                  click_function=None)
+            state.game.gui_update(
+                state=state,
+                gui_buttons=gui_buttons,
+                gui_root=gui_root,
+                moves=moves,
+                click_function=None,
+            )
 
-    def _matrix_to_display_coordinates(
-        self,
-        move: Tuple
-    ) -> str:
-        return '({}, {})'.format(move[1], chr(ord('a') - 1 + move[0]))
+    def _matrix_to_display_coordinates(self, move: tuple) -> str:
+        return "({}, {})".format(move[1], chr(ord("a") - 1 + move[0]))
 
     def generate_successors(
         self,
         state: TwoPlayerGameState,
-    ) -> List[TwoPlayerGameState]:
+    ) -> list[TwoPlayerGameState]:
         """Generate the list of successors of a game state."""
         successors = []
         board = state.board
@@ -242,7 +372,9 @@ class Reversi(TwoPlayerGame):
             # show the move on the board
             board_successor[move] = state.next_player.label
             # flip enemy
-            for enemy in self._enemy_captured_by_move(board, move, state.next_player.label):
+            for enemy in self._enemy_captured_by_move(
+                board, move, state.next_player.label
+            ):
                 board_successor[enemy] = state.next_player.label
             move_code = self._matrix_to_display_coordinates(move)
             successor = state.generate_successor(
@@ -266,14 +398,17 @@ class Reversi(TwoPlayerGame):
     def score(
         self,
         state: TwoPlayerGameState,
-    ) -> Tuple[bool, Optional[np.ndarray]]:
+    ) -> tuple[bool, np.ndarray | None]:
         """Determine whether a game state is terminal."""
         board = state.board
 
-        end_of_game = (len(
-            self._get_valid_moves(board, self.player1.label) +
-            self._get_valid_moves(board, self.player2.label)
-            ) == 0)
+        end_of_game = (
+            len(
+                self._get_valid_moves(board, self.player1.label)
+                + self._get_valid_moves(board, self.player2.label)
+            )
+            == 0
+        )
 
         scores = np.zeros(self.n_players, dtype=float)
         players = (self.player1, self.player2)
@@ -283,12 +418,12 @@ class Reversi(TwoPlayerGame):
         return end_of_game, scores
 
     def initialize_buttons(self, board: Any, gui_frame: Frame) -> dict:
-        assert (board is not None)
-        assert (gui_frame is not None)
+        assert board is not None
+        assert gui_frame is not None
         gui_buttons = {}
         # Put buttons and labels the first time this is called
-        for row in range(0, self.height + 1):
-            for col in range(0, self.width + 1):
+        for row in range(self.height + 1):
+            for col in range(self.width + 1):
                 piece = Label(gui_frame)  # Dummy piece
                 if col > 0 and row > 0:  # Actual buttons
                     if (col, row) in board:  # Black and white
@@ -306,16 +441,21 @@ class Reversi(TwoPlayerGame):
                 if col == 0 and row > 0:  # Vertical number axis
                     piece = Label(gui_frame, text=str(row))
                 if row == 0 and col > 0:  # Horizontal letter axis
-                    piece = Label(gui_frame, text=chr(col+96))
+                    piece = Label(gui_frame, text=chr(col + 96))
                 # Place piece
                 piece.grid(row=row, column=col)
         return gui_buttons
 
-    def gui_update(self, state: TwoPlayerGameState, gui_buttons: dict,
-                   gui_root: Tk, moves: list = [],
-                   click_function: Callable[[Any], None] = None) -> None:
-        assert (gui_buttons is not None)
-        assert (gui_root is not None)
+    def gui_update(
+        self,
+        state: TwoPlayerGameState,
+        gui_buttons: dict,
+        gui_root: Tk,
+        moves: list = [],
+        click_function: Callable[[Any], None] = None,
+    ) -> None:
+        assert gui_buttons is not None
+        assert gui_root is not None
         board = state.board
         for row in range(1, self.height + 1):
             for col in range(1, self.width + 1):
@@ -333,7 +473,11 @@ class Reversi(TwoPlayerGame):
                     gui_buttons[pos].configure(bg=cur_bg, state=DISABLED)
                 elif move_code in moves:  # Valid moves
                     gui_buttons[pos].configure(
-                        bg="blue" if state.next_player.label == self.player1.label else "red", state=NORMAL)
+                        bg="blue"
+                        if state.next_player.label == self.player1.label
+                        else "red",
+                        state=NORMAL,
+                    )
                     if click_function:
                         gui_buttons[pos].bind(
                             "<Button-1>",

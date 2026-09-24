@@ -1,23 +1,22 @@
 """Heuristics to evaluate board.
 
-    Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+    Fabiano Baroni <fabiano.baroni@uam.es>,
+    Alejandro Bellogin <alejandro.bellogin@uam.es>
+    Alberto Suárez <alberto.suarez@uam.es>
 
 """
 
-
 from __future__ import annotations  # For Python 3.7
 
-from typing import Callable, Sequence
+from collections.abc import Callable, Sequence
 
 import numpy as np
 
 from game import TwoPlayerGameState
 
 
-class Heuristic(object):
+class Heuristic:
     """Encapsulation of the evaluation fucnction."""
 
     def __init__(
@@ -44,7 +43,7 @@ class Heuristic(object):
 
 def simple_evaluation_function(state: TwoPlayerGameState) -> float:
     """Return a random value, except for terminal game states."""
-    state_value = 2*np.random.rand() - 1
+    state_value = 2 * np.random.rand() - 1
 
     if state.end_of_game:
         scores = state.scores
@@ -56,14 +55,14 @@ def simple_evaluation_function(state: TwoPlayerGameState) -> float:
         if state.is_player_max(state.player1):
             state_value = score_difference
         elif state.is_player_max(state.player2):
-            state_value = - score_difference
+            state_value = -score_difference
         else:
-            raise ValueError('Player MAX not defined')
+            raise ValueError("Player MAX not defined")
 
     return state_value
 
 
 heuristic = Heuristic(
-    name='Simple heuristic',
+    name="Simple heuristic",
     evaluation_function=simple_evaluation_function,
 )

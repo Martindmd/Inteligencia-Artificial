@@ -1,16 +1,16 @@
 """Implementatio of tic-tac-toe.
 
-    Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+    Fabiano Baroni <fabiano.baroni@uam.es>,
+    Alejandro Bellogin <alejandro.bellogin@uam.es>
+    Alberto Suárez <alberto.suarez@uam.es>
 """
 
 from __future__ import annotations  # For Python 3.7
 
 import copy
-from typing import Any, List, Optional, Tuple
-from tkinter import Label, Button, DISABLED, NORMAL
+from tkinter import DISABLED, NORMAL, Button, Label
+from typing import Any
 
 import numpy as np
 
@@ -40,8 +40,8 @@ class TicTacToe(TwoPlayerGame):
     # Private functions
     def _determine_player_label_complete_line(
         self,
-        lines: List[np.ndarray],
-    ) -> Optional[int]:
+        lines: list[np.ndarray],
+    ) -> int | None:
 
         player_label_complete_line = 0
         i = 0
@@ -75,14 +75,14 @@ class TicTacToe(TwoPlayerGame):
     def generate_successors(
         self,
         state: TwoPlayerGameState,
-    ) -> List[TwoPlayerGameState]:
+    ) -> list[TwoPlayerGameState]:
         """Generate the list of successors of a game state."""
         successors = []
 
         n_rows, n_columns = np.shape(state.board)
         for i in range(n_rows):
             for j in range(n_columns):
-                if (state.board[i, j] == 0):
+                if state.board[i, j] == 0:
                     # Prevent modification of the board
                     board_successor = copy.deepcopy(state.board)
                     assert isinstance(state.next_player, Player)
@@ -102,12 +102,12 @@ class TicTacToe(TwoPlayerGame):
         i: int,
         j: int,
     ) -> str:
-        return '({}, {})'.format(chr(ord('a') + i), j + 1)
+        return "({}, {})".format(chr(ord("a") + i), j + 1)
 
     def score(
         self,
         state: TwoPlayerGameState,
-    ) -> Tuple[bool, Optional[np.ndarray]]:
+    ) -> tuple[bool, np.ndarray | None]:
         """Determine whether a game state is terminal."""
         board = state.board
         diagonal = np.diagonal(board)
@@ -122,9 +122,7 @@ class TicTacToe(TwoPlayerGame):
         for j in range(n_columns):
             lines.append(board[:, j])
 
-        player_label_complete_line = (
-            self._determine_player_label_complete_line(lines)
-        )
+        player_label_complete_line = self._determine_player_label_complete_line(lines)
 
         end_of_game = (
             (player_label_complete_line != 0)  # player has completed a line
@@ -158,25 +156,35 @@ class TicTacToe(TwoPlayerGame):
                     piece = Button(gui_frame, bg=color, state=status)
                     gui_buttons[(row, col)] = piece  # Record button
                 if col == -1 and row > -1:  # Vertical number axis
-                    row_label = chr(ord('a') + row)
+                    row_label = chr(ord("a") + row)
                     piece = Label(gui_frame, text=row_label)
                 if row == -1 and col > -1:  # Horizontal number axis
                     col_label = col + 1
                     piece = Label(gui_frame, text=col_label)
                 # Place piece
-                piece.grid(row=row+1, column=col+1)
+                piece.grid(row=row + 1, column=col + 1)
         return gui_buttons
 
-    def gui_update(self, state: TwoPlayerGameState, gui_buttons, gui_root, 
-                   moves: list = [], click_function=None) -> None:
+    def gui_update(
+        self,
+        state: TwoPlayerGameState,
+        gui_buttons,
+        gui_root,
+        moves: list = [],
+        click_function=None,
+    ) -> None:
         board = state.board
-        for row in range(0, self.dim_board):
-            for col in range(0, self.dim_board):
+        for row in range(self.dim_board):
+            for col in range(self.dim_board):
                 pos = (row, col)
                 move_code = self._matrix_to_display_coordinates(row, col)
                 if move_code in moves:  # Valid moves
                     gui_buttons[pos].configure(
-                        bg="blue" if state.next_player.label == self.player1.label else "red", state=NORMAL)
+                        bg="blue"
+                        if state.next_player.label == self.player1.label
+                        else "red",
+                        state=NORMAL,
+                    )
                     if click_function:
                         gui_buttons[pos].bind(
                             "<Button-1>",

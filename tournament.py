@@ -1,7 +1,7 @@
 """Infrastructure for tournament.
 
-   Author:
-        Alejandro Bellogin <alejandro.bellogin@uam.es>
+Author:
+     Alejandro Bellogin <alejandro.bellogin@uam.es>
 """
 
 from __future__ import annotations  # For Python 3.7
@@ -11,13 +11,13 @@ import os
 import sys
 import time
 from abc import ABC
+from collections.abc import Callable
 from importlib import util
-import traceback
-from typing import Callable, Tuple
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
 from heuristic import Heuristic
 from strategy import MinimaxStrategy
+
 """
 NOTE: When MinimaxAlphaBetaStrategy has been implemented
 replace MinimaxAlphaBetaStrategy for MinimaxStrategy,
@@ -37,18 +37,23 @@ class StudentHeuristic(ABC):
         pass
 
 
-class Tournament(object):
-    def __init__(self, max_depth: int,
-                 init_match: Callable[[Player, Player], TwoPlayerMatch],
-                 max_evaluation_time: float):
+class Tournament:
+    def __init__(
+        self,
+        max_depth: int,
+        init_match: Callable[[Player, Player], TwoPlayerMatch],
+        max_evaluation_time: float,
+    ):
         self.__max_depth = max_depth
         self.__init_match = init_match
         self.__max_eval_time = max_evaluation_time
 
-    def __get_function_from_str(self, name: str, definition: str, max_strat: int) -> list:
+    def __get_function_from_str(
+        self, name: str, definition: str, max_strat: int
+    ) -> list:
         # write content in file with new name
         newfile = "playermodule__" + name
-        with open(newfile, 'w') as fp:
+        with open(newfile, "w") as fp:
             print(definition, file=fp)
         student_classes = list()
         n_strat = 0
@@ -65,8 +70,11 @@ class Tournament(object):
                             student_classes.append(obj)
                             n_strat += 1
                         elif name2 == "evaluation_function":
-                            print("Ignoring evaluation function in %s because limit of submissions was reached (%d)" % (
-                                name, max_strat), file=sys.stderr)
+                            print(
+                                "Ignoring evaluation function in %s because limit of submissions was reached (%d)"
+                                % (name, max_strat),
+                                file=sys.stderr,
+                            )
                     # end for
             # end for
         # remove file
@@ -79,16 +87,20 @@ class Tournament(object):
         for f in os.listdir(folder):
             p = os.path.join(folder, f)
             if os.path.isfile(p):
-                with open(p, 'r') as fp:
+                with open(p, "r") as fp:
                     s = fp.read()
                     name = f
-                    strategies = self.__get_function_from_str(
-                        name, s, max_strat)
+                    strategies = self.__get_function_from_str(name, s, max_strat)
                     student_strategies[f] = strategies
         return student_strategies
 
-    def run(self, student_strategies: dict, increasing_depth: bool = True,
-            n_pairs: int = 1, allow_selfmatch: bool = False) -> Tuple[dict, dict, dict]:
+    def run(
+        self,
+        student_strategies: dict,
+        increasing_depth: bool = True,
+        n_pairs: int = 1,
+        allow_selfmatch: bool = False,
+    ) -> tuple[dict, dict, dict]:
         """
         Play a tournament among the strategies.
         n_pairs = games each strategy plays as each color against
@@ -109,7 +121,7 @@ class Tournament(object):
                 for player1 in strats1:
                     for player2 in strats2:
                         # we now instantiate the players
-                        for pair in range(2*n_pairs):
+                        for pair in range(2 * n_pairs):
                             player1_first = (pair % 2) == 1
                             sh1 = player1()
                             name1 = student1 + "_" + sh1.get_name()
@@ -124,7 +136,8 @@ class Tournament(object):
                                         strategy=MinimaxStrategy(  # MinimaxAlphaBetaStrategy(
                                             heuristic=Heuristic(
                                                 name=sh1.get_name(),
-                                                evaluation_function=sh1.evaluation_function),
+                                                evaluation_function=sh1.evaluation_function,
+                                            ),
                                             max_depth_minimax=depth,
                                             max_sec_per_evaluation=self.__max_eval_time,
                                             verbose=0,
@@ -135,7 +148,8 @@ class Tournament(object):
                                         strategy=MinimaxStrategy(  # MinimaxAlphaBetaStrategy(
                                             heuristic=Heuristic(
                                                 name=sh2.get_name(),
-                                                evaluation_function=sh2.evaluation_function),
+                                                evaluation_function=sh2.evaluation_function,
+                                            ),
                                             max_depth_minimax=depth,
                                             max_sec_per_evaluation=self.__max_eval_time,
                                             verbose=0,
@@ -143,7 +157,14 @@ class Tournament(object):
                                     )
 
                                     self.__single_run(
-                                        player1_first, pl1, name1, pl2, name2, scores, totals)
+                                        player1_first,
+                                        pl1,
+                                        name1,
+                                        pl2,
+                                        name2,
+                                        scores,
+                                        totals,
+                                    )
                             else:
                                 depth = self.__max_depth
                                 pl1 = Player(
@@ -151,7 +172,8 @@ class Tournament(object):
                                     strategy=MinimaxStrategy(  # MinimaxAlphaBetaStrategy(
                                         heuristic=Heuristic(
                                             name=sh1.get_name(),
-                                            evaluation_function=sh1.evaluation_function),
+                                            evaluation_function=sh1.evaluation_function,
+                                        ),
                                         max_depth_minimax=depth,
                                         max_sec_per_evaluation=self.__max_eval_time,
                                         verbose=0,
@@ -162,7 +184,8 @@ class Tournament(object):
                                     strategy=MinimaxStrategy(  # MinimaxAlphaBetaStrategy(
                                         heuristic=Heuristic(
                                             name=sh2.get_name(),
-                                            evaluation_function=sh2.evaluation_function),
+                                            evaluation_function=sh2.evaluation_function,
+                                        ),
                                         max_depth_minimax=depth,
                                         max_sec_per_evaluation=self.__max_eval_time,
                                         verbose=0,
@@ -171,13 +194,25 @@ class Tournament(object):
 
                                 self.__single_run(
                                     player1_first,
-                                    pl1, name1,
-                                    pl2, name2,
-                                    scores, totals)
+                                    pl1,
+                                    name1,
+                                    pl2,
+                                    name2,
+                                    scores,
+                                    totals,
+                                )
         return scores, totals, name_mapping
 
-    def __single_run(self, player1_first: bool, pl1: Player, name1: str,
-                     pl2: Player, name2: str, scores: dict, totals: dict):
+    def __single_run(
+        self,
+        player1_first: bool,
+        pl1: Player,
+        name1: str,
+        pl2: Player,
+        name2: str,
+        scores: dict,
+        totals: dict,
+    ):
         players = []
         if player1_first:
             players = [pl1, pl2]
@@ -204,10 +239,12 @@ class Tournament(object):
             scores[name1] = dict()
         if name2 not in scores:
             scores[name2] = dict()
-        scores[name1][name2] = wins if name2 not in scores[name1] else wins + \
-            scores[name1][name2]
-        scores[name2][name1] = loses if name1 not in scores[name2] else loses + \
-            scores[name2][name1]
+        scores[name1][name2] = (
+            wins if name2 not in scores[name1] else wins + scores[name1][name2]
+        )
+        scores[name2][name1] = (
+            loses if name1 not in scores[name2] else loses + scores[name2][name1]
+        )
         # store the total values
         if name1 not in totals:
             totals[name1] = 0

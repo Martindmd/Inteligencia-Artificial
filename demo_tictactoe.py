@@ -1,27 +1,32 @@
 """Illustration of a tic-tac-toe match.
 
-    Authors:
-        Fabiano Baroni <fabiano.baroni@uam.es>,
-        Alejandro Bellogin <alejandro.bellogin@uam.es>
-        Alberto Suárez <alberto.suarez@uam.es>
+Authors:
+    Fabiano Baroni <fabiano.baroni@uam.es>,
+    Alejandro Bellogin <alejandro.bellogin@uam.es>
+    Alberto Suárez <alberto.suarez@uam.es>
 """
+
 from __future__ import annotations  # For Python 3.7
 
 import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
 from heuristic import heuristic
-from strategy import (ManualStrategy, MinimaxAlphaBetaStrategy,
-                      MinimaxStrategy, RandomStrategy)
+from strategy import (
+    ManualStrategy,
+    MinimaxAlphaBetaStrategy,
+    MinimaxStrategy,
+    RandomStrategy,
+)
 from tictactoe import TicTacToe
 
 player_manual = Player(
-    name='Manual',
+    name="Manual",
     strategy=ManualStrategy(verbose=0),
 )
 
 player_minimax3_1 = Player(
-    name='IA 1 (minimax, 3)',
+    name="IA 1 (minimax, 3)",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=3,
@@ -31,7 +36,7 @@ player_minimax3_1 = Player(
 )
 
 player_minimax3_2 = Player(
-    name='IA 2 (minimax, 3)',
+    name="IA 2 (minimax, 3)",
     strategy=MinimaxStrategy(
         heuristic=heuristic,
         max_depth_minimax=3,
@@ -41,7 +46,7 @@ player_minimax3_2 = Player(
 )
 
 player_alphabeta = Player(
-    name='IA 3 (alphabeta, 3)',
+    name="IA 3 (alphabeta, 3)",
     strategy=MinimaxAlphaBetaStrategy(
         heuristic=heuristic,
         max_depth_minimax=3,
@@ -51,7 +56,7 @@ player_alphabeta = Player(
 )
 
 player_random = Player(
-    name='Random',
+    name="Random",
     strategy=RandomStrategy(),
     delay=0,
 )
@@ -103,4 +108,4 @@ match = TwoPlayerMatch(
 
 # Play a match.
 scores = match.play_match()
-input('Press any key to finish.')
+input("Press any key to finish.")
