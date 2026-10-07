@@ -60,7 +60,7 @@ class CornerReversiState:
         Returns a list of legal moves from the current state.
         """
         next_player = self.player2 if self.cur_player == self.player1 else self.player1
-        return """YOUR CODE HERE"""  # RETURN THE LIST OF VALID MOVES
+        return get_valid_moves(self.board, self.height, self.width, self.cur_player, next_player, self.blocked_cell_label, self.ignore_block_cells_in_captures)  # REVIEWRETURN THE LIST OF VALID MOVES
 
     def result(self, move):
         """
@@ -82,8 +82,8 @@ class CornerReversiState:
             self.blocked_cell_label,
             self.ignore_block_cells_in_captures,
         ):
-            result_board[enemy] = """YOUR CODE HERE"""  # update the board
-        return """YOUR CODE HERE"""  # RETURN THE NEW STATE CONSIDERING THE UPDATES
+            result_board[enemy] = self.cur_player # REVIEW  # update the board
+        return result_board # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
     def __eq__(self, other):
@@ -93,6 +93,9 @@ class CornerReversiState:
         return self.board == other.board
 
     def __hash__(self):
+        """
+        Returns the hash value of a display string for the state
+        """
         return hash(self.__getAsciiString())
 
     def __getAsciiString(self):
@@ -217,6 +220,8 @@ def build_game_tree(search_problem, max_depth):
     root: the root node of the tree
     stats: a dictionary with the computed statistics
     """
+    """ NOTE: Para devolver el árbol se usa la función TreeNode.
+    Hay que generar stats para el factir de ramificación (n ramas / n nodos)"""
     stats = {
         "nodes": 0,
         "leaves": 0,
@@ -225,7 +230,7 @@ def build_game_tree(search_problem, max_depth):
         "internal_nodes": 0,
     }
 
-    """YOUR CODE HERE"""
+    """YOUR CODE HERE""" # TODO
 
     return None, stats
 
@@ -246,12 +251,12 @@ def depthFirstSearch(search_problem):
     """
     num_visited = 0
     structure = util.Stack()
-    structure.push("""YOUR CODE HERE""")  # DEFINE THE INITIAL STATE
+    structure.push("""YOUR CODE HERE""") # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
         path = structure.pop()
-        current_state = """YOUR CODE HERE"""  # INDEX THE CURRENT STATE
+        current_state = """YOUR CODE HERE"""  # TODO # INDEX THE CURRENT STATE
 
         if search_problem.isGoalState(current_state):
             return """YOUR CODE HERE"""  # RETURN THE PATH OF STATES
