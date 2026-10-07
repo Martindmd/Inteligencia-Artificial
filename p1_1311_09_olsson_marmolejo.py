@@ -1,3 +1,7 @@
+from collections.abc import Sequence
+
+import numpy as np
+
 from game import (
     TwoPlayerGameState,
 )
@@ -156,6 +160,7 @@ class Solution3(StudentHeuristic):
         scores_max = state.scores[number_max]
         scores_min = state.scores[number_min]
 
+        state_value = 0
         if scores_max > scores_min:
             state_value += -5
         else:
