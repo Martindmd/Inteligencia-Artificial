@@ -126,7 +126,7 @@ initial_board = intermediate_board
 # initial_board = obstacle_board
 
 # NOTE Uncoment to use standard initial board:
-# initial_board = None  # Standard initial board.
+initial_board = None  # Standard initial board.
 
 if initial_board is None:
     height, width = 8, 8

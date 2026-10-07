@@ -9,6 +9,7 @@ from datetime import timedelta
 from timeit import default_timer as timer
 
 import util
+from game import TwoPlayerGameState
 from reversi import (
     create_standard_board,
     enemy_captured_by_move,
@@ -60,7 +61,15 @@ class CornerReversiState:
         Returns a list of legal moves from the current state.
         """
         next_player = self.player2 if self.cur_player == self.player1 else self.player1
-        return get_valid_moves(self.board, self.height, self.width, self.cur_player, next_player, self.blocked_cell_label, self.ignore_block_cells_in_captures)  # REVIEWRETURN THE LIST OF VALID MOVES
+        return get_valid_moves(
+            self.board,
+            self.height,
+            self.width,
+            self.cur_player,
+            next_player,
+            self.blocked_cell_label,
+            self.ignore_block_cells_in_captures,
+        )  # REVIEWRETURN THE LIST OF VALID MOVES
 
     def result(self, move):
         """
@@ -82,8 +91,8 @@ class CornerReversiState:
             self.blocked_cell_label,
             self.ignore_block_cells_in_captures,
         ):
-            result_board[enemy] = self.cur_player # REVIEW  # update the board
-        return result_board # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
+            result_board[enemy] = self.cur_player  # REVIEW  # update the board
+        return result_board  # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
     def __eq__(self, other):
@@ -230,7 +239,7 @@ def build_game_tree(search_problem, max_depth):
         "internal_nodes": 0,
     }
 
-    """YOUR CODE HERE""" # TODO
+    """YOUR CODE HERE"""  # TODO
 
     return None, stats
 
@@ -244,14 +253,20 @@ def depthFirstSearch(search_problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
-    print("Start:", search_problem.getStartState())
-    print("Is the start a goal?", search_problem.isGoalState(search_problem.getStartState()))
-    print("Start's successors:", search_problem.getSuccessors(search_problem.getStartState()))
     """
+    print("Start:", search_problem.getStartState())
+    print(
+        "Is the start a goal?",
+        search_problem.isGoalState(search_problem.getStartState()),
+    )
+    print(
+        "Start's successors:",
+        search_problem.getSuccessors(search_problem.getStartState()),
+    )
+
     num_visited = 0
     structure = util.Stack()
-    structure.push("""YOUR CODE HERE""") # TODO # DEFINE THE INITIAL STATE
+    structure.push("""YOUR CODE HERE""")  # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
@@ -296,9 +311,101 @@ def heuristic1(state, search_problem=None):
     return 0
 
 
-def heuristic2(state, search_problem=None):
-    "*** YOUR CODE HERE ***"
-    return 0
+def heuristic2(
+    state: TwoPlayerGameState, search_problem=None
+):  # state: TwoPlayerGameState
+    if state.end_of_game:
+        scores = state.scores
+        # Evaluation of the state from the point of view of MAX
+
+        assert isinstance(scores, (Sequence, np.ndarray))
+        score_difference = scores[0] - scores[1]
+
+        if state.is_player_max(state.player1):
+            state_value = score_difference
+        elif state.is_player_max(state.player2):
+            state_value = -score_difference
+        else:
+            raise ValueError("Player MAX not defined")
+
+        return state_value
+
+    score = 0
+    for x in range(7):
+        for y in range(7):
+            if state.player_max.label == state.board.get((x, y)):
+                move = (x, y)
+                if move == (1, 1) or move == (1, 6) or move == (6, 1) or move == (6, 6):
+                    score = score - 3
+                elif (
+                    move == (0, 1)
+                    or move == (0, 6)
+                    or move == (1, 0)
+                    or move == (1, 7)
+                    or move == (6, 0)
+                    or move == (6, 7)
+                    or move == (7, 1)
+                    or move == (7, 6)
+                ):
+                    score = score - 2
+                elif (
+                    move == (1, 2)
+                    or move == (1, 3)
+                    or move == (1, 4)
+                    or move == (1, 5)
+                    or move == (2, 1)
+                    or move == (2, 6)
+                    or move == (3, 1)
+                    or move == (3, 6)
+                    or move == (4, 1)
+                    or move == (4, 6)
+                    or move == (5, 1)
+                    or move == (5, 6)
+                    or move == (6, 2)
+                    or move == (6, 3)
+                    or move == (6, 4)
+                    or move == (6, 5)
+                ):
+                    score = score - 1
+                elif (
+                    move == (2, 3)
+                    or move == (2, 4)
+                    or move == (3, 2)
+                    or move == (3, 5)
+                    or move == (4, 2)
+                    or move == (4, 5)
+                    or move == (5, 3)
+                    or move == (5, 4)
+                ):
+                    score = score + 0
+                elif (
+                    move == (2, 2) or move == (2, 5) or move == (5, 2) or move == (5, 5)
+                ):
+                    score = score + 1
+                elif (
+                    move == (0, 2)
+                    or move == (0, 3)
+                    or move == (0, 4)
+                    or move == (0, 5)
+                    or move == (2, 0)
+                    or move == (2, 7)
+                    or move == (3, 0)
+                    or move == (3, 7)
+                    or move == (4, 0)
+                    or move == (4, 7)
+                    or move == (5, 0)
+                    or move == (5, 7)
+                    or move == (7, 2)
+                    or move == (7, 3)
+                    or move == (7, 4)
+                    or move == (7, 5)
+                ):
+                    score = score + 2
+                elif (
+                    move == (0, 0) or move == (0, 7) or move == (7, 0) or move == (7, 7)
+                ):
+                    score = score + 3
+    return score
 
 
 def heuristic3(state, search_problem=None):
