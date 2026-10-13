@@ -12,6 +12,8 @@ from tournament import (
     StudentHeuristic,
 )
 
+VICTORY_SCORE = 99999
+
 
 def func_glob(n: int, state: TwoPlayerGameState) -> float:
     return n + simple_evaluation_function(state)
@@ -24,16 +26,22 @@ class Solution1(StudentHeuristic):
     """
 
     def get_name(self) -> str:
-        return "random-esque"
+        return "morning-victory"
 
     def evaluation_function(self, state: TwoPlayerGameState) -> float:
-        # let's use a global function
-        return func_glob(0, state)
+        # combination of both heuristics
+        total_score = state.scores[0] + state.scores[1]
+        if total_score <= 30:
+            return Solution2.evaluation_function(self,state) + Solution3.evaluation_function(self, state)
+        elif total_score <= 45:
+            return Solution2.evaluation_function(self,state) + 0.5 * Solution3.evaluation_function(self, state)
+        else:
+            return Solution2.evaluation_function(self,state)
 
 
 class Solution2(StudentHeuristic):
     def get_name(self) -> str:
-        return "solution2"
+        return "underdog"
 
     def evaluation_function(self, state: TwoPlayerGameState) -> float:
         if state.end_of_game:
@@ -44,9 +52,9 @@ class Solution2(StudentHeuristic):
             score_difference = scores[0] - scores[1]
 
             if state.is_player_max(state.player1):
-                state_value = score_difference
+                state_value = VICTORY_SCORE
             elif state.is_player_max(state.player2):
-                state_value = -score_difference
+                state_value = -VICTORY_SCORE
             else:
                 raise ValueError("Player MAX not defined")
 
@@ -137,7 +145,7 @@ class Solution2(StudentHeuristic):
                         or move == (7, 0)
                         or move == (7, 7)
                     ):
-                        score = score + 3
+                        score = score + 120
         return score
 
 
@@ -162,17 +170,17 @@ class Solution3(StudentHeuristic):
 
         state_value = 0
         if scores_max > scores_min:
-            state_value += -5
+            state_value += -15
         else:
-            state_value += 5
+            state_value += 15
         if state.end_of_game:
             scores = state.scores
             score_difference = scores[0] - scores[1]
 
             if state.is_player_max(state.player1):
-                state_value = score_difference
+                state_value = VICTORY_SCORE
             elif state.is_player_max(state.player2):
-                state_value = -score_difference
+                state_value = -VICTORY_SCORE
             else:
                 raise ValueError("Player MAX not defined")
 
