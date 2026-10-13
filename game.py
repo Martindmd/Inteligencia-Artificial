@@ -20,6 +20,8 @@ from typing import Any
 
 import numpy as np
 
+from strategy import Strategy
+
 
 class Player:
     """Player properties."""
@@ -32,7 +34,7 @@ class Player:
     ) -> None:
         self.label: Any = None
         self.name = name
-        self.strategy = strategy
+        self.strategy: Strategy = strategy
         self.delay = delay
 
     def move(
@@ -73,7 +75,9 @@ class TwoPlayerGameState:
         self.gui_thread = None
 
     @property
-    def previous_player(self) -> Player:
+    def previous_player(
+        self,
+    ) -> Player | None:  # REVIEW: He añadido lo de "None" porque lo decía Pylance
         if self.parent:
             return self.parent.next_player
 
@@ -107,7 +111,8 @@ class TwoPlayerGameState:
                     self.gui_root = None
                     self.gui_frame = None
                     self.gui_buttons = None
-                    self.setDaemon(True)
+                    # self.setDaemon(True) REVIEW: The method "setDaemon" in class "Thread" is deprecated. Deprecated since Python 3.10. Set the `daemon` attribute instead.
+                    self.daemon = True
                     self.start()
 
                 def run(self):
