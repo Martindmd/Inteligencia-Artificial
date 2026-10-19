@@ -7,6 +7,7 @@ Authors:
 import random
 from datetime import timedelta
 from timeit import default_timer as timer
+from treenode import TreeNode
 
 import util
 from game import TwoPlayerGameState
@@ -92,7 +93,8 @@ class CornerReversiState:
             self.ignore_block_cells_in_captures,
         ):
             result_board[enemy] = self.cur_player  # REVIEW  # update the board
-        return result_board  # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
+        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary)
+        return result_state # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
     def __eq__(self, other):
@@ -237,11 +239,30 @@ def build_game_tree(search_problem, max_depth):
         "max_depth": 0,
         "branching_sum": 0,
         "internal_nodes": 0,
+        "ramification": 0
     }
 
     """YOUR CODE HERE"""  # TODO
+    current_state = search_problem.getStartState()
+    tree = TreeNode(current_state)
+    def recursive_nodes(current_depth: int, current_node: TreeNode, actual_state: CornerReversiState, current_problem: CornerReversiSearchProblem):
+        if current_depth == max_depth:
+            return
+        else:
+            for state in current_problem.getSuccessors(actual_state):
+                if current_depth == max_depth - 1:
+                    stats["leaves"] = stats["leaves"] + 1
+                new_problem = CornerReversiSearchProblem(state[0])
+                recursive_nodes(current_depth + 1, current_node.add_child(state[0]), state[0], new_problem)
 
-    return None, stats
+    recursive_nodes(0, tree, current_state, search_problem)
+
+    stats["nodes"] = tree.count_folders() + tree.count_files()
+    stats["max_depth"] = max_depth
+    stats["branching_sum"] = stats["nodes"] - 1
+    stats["internal_nodes"] = tree.count_folders() - stats["leaves"]
+    stats["ramification"] = stats["branching_sum"]/stats["internal_nodes"]
+    return tree, stats
 
 
 def depthFirstSearch(search_problem):
@@ -333,6 +354,7 @@ def createRandomReversiGeneralState(moves, h, w):
     )
     for _ in range(moves):
         # Execute a random legal move
+        print(puzzle.legalMoves())
         puzzle = puzzle.result(random.sample(puzzle.legalMoves(), 1)[0])
     return puzzle
 

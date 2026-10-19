@@ -6,7 +6,7 @@ Rellenar los "YOUR CODE HERE" de search.py empleando las funciones de reversi.py
 
 - [x] legalMoves()
 - [x] result()
-- [ ] Implementar la función build_game_tree en search.py <- M
+- [x] Implementar la función build_game_tree en search.py <- M
 
 Probar vuestro código (basta con lanzarlo como “python search.py”) utilizando las profundidades 1, 2, 3 y 4 sobre el tablero inicial de Reversi
 
