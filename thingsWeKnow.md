@@ -23,8 +23,8 @@ Se aplican sobre tableros iniciales y el código debe además medir:
 
 > Completa el fichero search.py para que se obtenga esta información simplemente haciendo “python search.py”.
 
-- [ ] Complementar la Búsqueda en profundidad (depthFirstSearch()) <- A
-- [ ] Crear la función para la Búsqueda en anchura (breadthFirstSearch()) creando un estado de búsqueda que incluya: <- M
+- [X] Complementar la Búsqueda en profundidad (depthFirstSearch()) <- A
+- [X] Crear la función para la Búsqueda en anchura (breadthFirstSearch()) creando un estado de búsqueda que incluya: <- M
    1. Info sobre etapa actual en la búsqueda
    2. Info suficiente para poder acceder a la trayectoria desde el principio hasta el final
 
@@ -39,3 +39,7 @@ Toma dos argumentos:
 - [ ] heuristic1() <- AM
 - [ ] heuristic2() <- None
 - [ ] heuristic3() <- None
+
+## A.3: Aplicando búsqueda adversarial (strategy.py)
+
+- [ ] AlphaBeta pruning <- M

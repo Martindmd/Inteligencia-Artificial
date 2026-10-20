@@ -93,7 +93,7 @@ class CornerReversiState:
             self.ignore_block_cells_in_captures,
         ):
             result_board[enemy] = self.cur_player  # REVIEW  # update the board
-        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary)
+        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary, self.height, self.width, self.ignore_block_cells_in_captures)
         return result_state # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
@@ -275,43 +275,60 @@ def depthFirstSearch(search_problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     """
-    print("Start:", search_problem.getStartState())
-    print(
-        "Is the start a goal?",
-        search_problem.isGoalState(search_problem.getStartState()),
-    )
-    print(
-        "Start's successors:",
-        search_problem.getSuccessors(search_problem.getStartState()),
-    )
+
+    #print("Start:", search_problem.getStartState())
+    #print("Is the start a goal?" + search_problem.isGoalState(search_problem.getStartState()))
+    #print("Start's successors:" + search_problem.getSuccessors(search_problem.getStartState()))
 
     num_visited = 0
     structure = util.Stack()
-    structure.push("""YOUR CODE HERE""")  # TODO # DEFINE THE INITIAL STATE
+    structure.push((search_problem.getStartState(), []))  # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
         path = structure.pop()
-        current_state = """YOUR CODE HERE"""  # TODO # INDEX THE CURRENT STATE
-
+        current_state = path[0]  # TODO # INDEX THE CURRENT STATE
+        num_visited = len(visited)
         if search_problem.isGoalState(current_state):
-            return """YOUR CODE HERE"""  # RETURN THE PATH OF STATES
+            return num_visited, path[1]   # RETURN THE PATH OF STATES
 
         if current_state not in visited:
             visited.append(current_state)
 
             for successor in search_problem.getSuccessors(current_state):
                 if successor[0] not in visited:
-                    new_path = """YOUR CODE HERE"""  # CREATE THE NEW PATH OF STATES
-                    structure.push(new_path)
+                    new_path = path[1].copy() # CREATE THE NEW PATH OF STATES
+                    new_path.append(successor[1])
 
+                    structure.push((successor[0], new_path))
     return num_visited, None
 
 
 def breadthFirstSearch(search_problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    raise NotImplementedError
+    num_visited = 0
+    structure = util.Queue()
+    structure.push((search_problem.getStartState(),[]))  # TODO # DEFINE THE INITIAL STATE
+    visited = []
+
+    while not structure.isEmpty():
+        path = structure.pop()
+        current_state = path[0]  # TODO # INDEX THE CURRENT STATE
+        num_visited = len(visited)
+        if search_problem.isGoalState(current_state):
+            return num_visited, path[1]  # RETURN THE PATH OF STATES
+
+        if current_state not in visited:
+            visited.append(current_state)
+
+            for successor in search_problem.getSuccessors(current_state):
+                if successor[0] not in visited:
+                    new_path = path[1].copy()  # CREATE THE NEW PATH OF STATES
+                    new_path.append(successor[1])
+
+                    structure.push((successor[0], new_path))
+    return num_visited, None
 
 
 def nullHeuristic(state, search_problem=None):
@@ -411,6 +428,7 @@ if __name__ == "__main__":
     for method in ["DFS", "BFS"]:
         start = timer()
         if method == "DFS":
+            print(problem.getStartState())
             visited, path = depthFirstSearch(problem)
         elif method == "BFS":
             visited, path = breadthFirstSearch(problem)
