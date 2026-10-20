@@ -9,6 +9,8 @@ from datetime import timedelta
 from timeit import default_timer as timer
 from treenode import TreeNode
 
+from p1_1311_09_olsson_marmolejo import Solution1, Solution2, Solution3
+
 import util
 from game import TwoPlayerGameState
 from reversi import (
@@ -26,14 +28,14 @@ class CornerReversiState:
     """
 
     def __init__(
-        self,
-        board: dict,
-        player1="B",
-        player2="W",
-        cur_player="B",
-        height=8,
-        width=8,
-        ignore_block_cells_in_captures: bool = False,
+            self,
+            board: dict,
+            player1="B",
+            player2="W",
+            cur_player="B",
+            height=8,
+            width=8,
+            ignore_block_cells_in_captures: bool = False,
     ):
         "Creates a new CornerReversiState, very similar to Reversi."
         self.board = board
@@ -85,16 +87,17 @@ class CornerReversiState:
         result_board[move] = self.cur_player
         # flip enemy
         for enemy in enemy_captured_by_move(
-            self.board,
-            move,
-            self.cur_player,
-            adversary,
-            self.blocked_cell_label,
-            self.ignore_block_cells_in_captures,
+                self.board,
+                move,
+                self.cur_player,
+                adversary,
+                self.blocked_cell_label,
+                self.ignore_block_cells_in_captures,
         ):
             result_board[enemy] = self.cur_player  # REVIEW  # update the board
-        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary, self.height, self.width, self.ignore_block_cells_in_captures)
-        return result_state # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
+        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary, self.height, self.width,
+                                          self.ignore_block_cells_in_captures)
+        return result_state  # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
     def __eq__(self, other):
@@ -245,7 +248,9 @@ def build_game_tree(search_problem, max_depth):
     """YOUR CODE HERE"""  # TODO
     current_state = search_problem.getStartState()
     tree = TreeNode(current_state)
-    def recursive_nodes(current_depth: int, current_node: TreeNode, actual_state: CornerReversiState, current_problem: CornerReversiSearchProblem):
+
+    def recursive_nodes(current_depth: int, current_node: TreeNode, actual_state: CornerReversiState,
+                        current_problem: CornerReversiSearchProblem):
         if current_depth == max_depth:
             return
         else:
@@ -261,7 +266,7 @@ def build_game_tree(search_problem, max_depth):
     stats["max_depth"] = max_depth
     stats["branching_sum"] = stats["nodes"] - 1
     stats["internal_nodes"] = tree.count_folders() - stats["leaves"]
-    stats["ramification"] = stats["branching_sum"]/stats["internal_nodes"]
+    stats["ramification"] = stats["branching_sum"] / stats["internal_nodes"]
     return tree, stats
 
 
@@ -276,9 +281,9 @@ def depthFirstSearch(search_problem):
     understand the search problem that is being passed in:
     """
 
-    #print("Start:", search_problem.getStartState())
-    #print("Is the start a goal?" + search_problem.isGoalState(search_problem.getStartState()))
-    #print("Start's successors:" + search_problem.getSuccessors(search_problem.getStartState()))
+    # print("Start:", search_problem.getStartState())
+    # print("Is the start a goal?" + search_problem.isGoalState(search_problem.getStartState()))
+    # print("Start's successors:" + search_problem.getSuccessors(search_problem.getStartState()))
 
     num_visited = 0
     structure = util.Stack()
@@ -290,14 +295,14 @@ def depthFirstSearch(search_problem):
         current_state = path[0]  # TODO # INDEX THE CURRENT STATE
         num_visited = len(visited)
         if search_problem.isGoalState(current_state):
-            return num_visited, path[1]   # RETURN THE PATH OF STATES
+            return num_visited, path[1]  # RETURN THE PATH OF STATES
 
         if current_state not in visited:
             visited.append(current_state)
 
             for successor in search_problem.getSuccessors(current_state):
                 if successor[0] not in visited:
-                    new_path = path[1].copy() # CREATE THE NEW PATH OF STATES
+                    new_path = path[1].copy()  # CREATE THE NEW PATH OF STATES
                     new_path.append(successor[1])
 
                     structure.push((successor[0], new_path))
@@ -309,7 +314,7 @@ def breadthFirstSearch(search_problem):
     "*** YOUR CODE HERE ***"
     num_visited = 0
     structure = util.Queue()
-    structure.push((search_problem.getStartState(),[]))  # TODO # DEFINE THE INITIAL STATE
+    structure.push((search_problem.getStartState(), []))  # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
@@ -359,10 +364,38 @@ def heuristic3(state, search_problem=None):
     return 0
 
 
+def movement_cost(movements, state, search_problem=None):
+    """
+    Devuelve el número de estados / movimientos necesarios hata el goal, SUPUESTAMENTE </3
+    """
+    if search_problem.isGoalState(state):
+        return movements
+    else:
+        for successor in search_problem.getSuccessors(state):
+            successor_state = successor[0]
+            return movement_cost(movements + 1, successor_state, search_problem)
+
+
 def aStarSearch(search_problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    raise NotImplementedError
+    pq = util.PriorityQueue()
+    visited = []
+    state: TwoPlayerGameState = search_problem.getStartState()
+    path = []
+    pq.push((state, path), 0)
+    while search_problem.isGoalState(state) == False:
+        state, path = pq.pop()
+        if path is None:
+            path = list()
+        if state not in visited:
+            visited.append(state)
+            for successor in search_problem.getSuccessors(state):
+                successor_state = successor[0]
+                # Guardamos los estados accesibles y sus costes h+g
+                pq.push((successor_state, path.append(successor[1])),
+                        heuristic(successor_state, search_problem) + movement_cost(0, successor_state, search_problem))
+
+    return len(visited), path
 
 
 def createRandomReversiGeneralState(moves, h, w):
@@ -420,9 +453,9 @@ if __name__ == "__main__":
     print("Problem to be solved: %s" % (problem.__class__))
 
     # game tree
-    for depth in [1, 2, 3, 4]:
-        root, stats = build_game_tree(problem, depth)
-        print("Depth", depth, "\t", stats)
+    # for depth in [1, 2, 3, 4]:
+    #     root, stats = build_game_tree(problem, depth)
+    #     print("Depth", depth, "\t", stats)
 
     # search methods
     for method in ["DFS", "BFS"]:
