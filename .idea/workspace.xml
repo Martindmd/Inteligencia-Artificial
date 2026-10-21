@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo_tournament.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo_tournament.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p1_1311_09_olsson_marmolejo.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1_1311_09_olsson_marmolejo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reversi.py" beforeDir="false" afterPath="$PROJECT_DIR$/reversi.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,6 +106,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.demo_tournament.executor": "Run",
+    "Python.p1_1311_09_olsson_marmolejo.executor": "Run",
     "Python.search.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -343,6 +343,15 @@
       <workItem from="1792056963835" duration="11084000" />
       <workItem from="1792515709645" duration="11726000" />
     </task>
+    <task id="LOCAL-00001" summary="stufff">
+      <option name="closed" value="true" />
+      <created>1792589113364</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1792589113365</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,12 +368,17 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="stufff" />
+    <option name="LAST_COMMIT_MESSAGE" value="stufff" />
+  </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Inteligencia_Artificial$demo_tournament.coverage" NAME="demo_tournament Coverage Results" MODIFIED="1792574631109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Inteligencia_Artificial$demo_tournament.coverage" NAME="demo_tournament Coverage Results" MODIFIED="1792604586869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inteligencia_Artificial$search.coverage" NAME="search Coverage Results" MODIFIED="1792570839692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Inteligencia_Artificial$p1_1311_09_olsson_marmolejo.coverage" NAME="p1_1311_09_olsson_marmolejo Coverage Results" MODIFIED="1792604538181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
