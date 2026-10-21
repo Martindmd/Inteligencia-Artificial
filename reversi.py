@@ -68,20 +68,20 @@ def from_dictionary_to_array_board(board_dictionary, height, width):
 
 
 def capture_enemy_in_dir(
-    board: dict,
-    move,
-    delta_x_y,
-    player_label: Any,
-    enemy_label: Any,
-    blocked_cell_label: Any,
-    ignore_block_cells_in_captures: bool,
+        board: dict,
+        move,
+        delta_x_y,
+        player_label: Any,
+        enemy_label: Any,
+        blocked_cell_label: Any,
+        ignore_block_cells_in_captures: bool,
 ) -> list:
     (delta_x, delta_y) = delta_x_y
     x, y = move
     x, y = x + delta_x, y + delta_y
     enemy_list_0 = []
     while board.get((x, y)) == enemy_label or (
-        board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
+            board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
     ):
         enemy_list_0.append((x, y))
         x, y = x + delta_x, y + delta_y
@@ -91,7 +91,7 @@ def capture_enemy_in_dir(
     x, y = x - delta_x, y - delta_y
     enemy_list_1 = []
     while board.get((x, y)) == enemy_label or (
-        board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
+            board.get((x, y)) == blocked_cell_label and ignore_block_cells_in_captures
     ):
         enemy_list_1.append((x, y))
         x, y = x - delta_x, y - delta_y
@@ -101,61 +101,61 @@ def capture_enemy_in_dir(
 
 
 def enemy_captured_by_move(
-    board: dict,
-    move,
-    player_label: Any,
-    enemy_label: Any,
-    blocked_cell_label: Any,
-    ignore_block_cells_in_captures: bool,
+        board: dict,
+        move,
+        player_label: Any,
+        enemy_label: Any,
+        blocked_cell_label: Any,
+        ignore_block_cells_in_captures: bool,
 ) -> list:
     return (
-        capture_enemy_in_dir(
-            board,
-            move,
-            (0, 1),
-            player_label,
-            enemy_label,
-            blocked_cell_label,
-            ignore_block_cells_in_captures,
-        )
-        + capture_enemy_in_dir(
-            board,
-            move,
-            (1, 0),
-            player_label,
-            enemy_label,
-            blocked_cell_label,
-            ignore_block_cells_in_captures,
-        )
-        + capture_enemy_in_dir(
-            board,
-            move,
-            (1, -1),
-            player_label,
-            enemy_label,
-            blocked_cell_label,
-            ignore_block_cells_in_captures,
-        )
-        + capture_enemy_in_dir(
-            board,
-            move,
-            (1, 1),
-            player_label,
-            enemy_label,
-            blocked_cell_label,
-            ignore_block_cells_in_captures,
-        )
+            capture_enemy_in_dir(
+                board,
+                move,
+                (0, 1),
+                player_label,
+                enemy_label,
+                blocked_cell_label,
+                ignore_block_cells_in_captures,
+            )
+            + capture_enemy_in_dir(
+        board,
+        move,
+        (1, 0),
+        player_label,
+        enemy_label,
+        blocked_cell_label,
+        ignore_block_cells_in_captures,
+    )
+            + capture_enemy_in_dir(
+        board,
+        move,
+        (1, -1),
+        player_label,
+        enemy_label,
+        blocked_cell_label,
+        ignore_block_cells_in_captures,
+    )
+            + capture_enemy_in_dir(
+        board,
+        move,
+        (1, 1),
+        player_label,
+        enemy_label,
+        blocked_cell_label,
+        ignore_block_cells_in_captures,
+    )
     )
 
 
 def get_valid_moves(
-    board: dict,
-    height: int,
-    width: int,
-    player_label: Any,
-    enemy_label: Any,
-    blocked_cell_label: Any,
-    ignore_block_cells_in_captures: bool,
+        board: dict,
+        height: int,
+        width: int,
+        player_label: Any,
+        enemy_label: Any,
+        blocked_cell_label: Any,
+        ignore_block_cells_in_captures: bool,
 ) -> list:
     """Returns a list of valid moves for the player judging from the board."""
     # Get all positions adjacent to existing pieces
@@ -167,21 +167,21 @@ def get_valid_moves(
             adj_x, adj_y = x + dx, y + dy
             # Only consider positions within board bounds and not occupied
             if (
-                1 <= adj_x <= width
-                and 1 <= adj_y <= height
-                and (adj_x, adj_y) not in board
+                    1 <= adj_x <= width
+                    and 1 <= adj_y <= height
+                    and (adj_x, adj_y) not in board
             ):
                 candidates.add((adj_x, adj_y))
     # Now check only these candidate positions for valid moves
     valid_moves = []
     for pos in candidates:
         if enemy_captured_by_move(
-            board,
-            pos,
-            player_label,
-            enemy_label,
-            blocked_cell_label,
-            ignore_block_cells_in_captures,
+                board,
+                pos,
+                player_label,
+                enemy_label,
+                blocked_cell_label,
+                ignore_block_cells_in_captures,
         ):
             valid_moves.append(pos)
 
@@ -192,12 +192,12 @@ class Reversi(TwoPlayerGame):
     """Specific definitions for Reversi."""
 
     def __init__(
-        self,
-        player1: Player,
-        player2: Player,
-        height: int,
-        width: int,
-        ignore_block_cells_in_captures: bool = False,
+            self,
+            player1: Player,
+            player2: Player,
+            height: int,
+            width: int,
+            ignore_block_cells_in_captures: bool = False,
     ) -> None:
         super().__init__(
             "Reversi",
@@ -251,12 +251,12 @@ class Reversi(TwoPlayerGame):
     def _coin_diff(self, board: dict) -> float:
         """Difference in the number of coins."""
         return (
-            100
-            * (
-                self._player_coins(board, self.player2.label)
-                - self._player_coins(board, self.player1.label)
-            )
-            / len(board)
+                100
+                * (
+                        self._player_coins(board, self.player2.label)
+                        - self._player_coins(board, self.player1.label)
+                )
+                / len(board)
         )
 
     def _choice_diff(self, board: dict) -> float:
@@ -265,9 +265,9 @@ class Reversi(TwoPlayerGame):
         white_moves_num = len(self._get_valid_moves(board, self.player2.label))
         if (black_moves_num + white_moves_num) != 0:
             return (
-                100
-                * (black_moves_num - white_moves_num)
-                / (black_moves_num + white_moves_num)
+                    100
+                    * (black_moves_num - white_moves_num)
+                    / (black_moves_num + white_moves_num)
             )
         else:
             return 0
@@ -358,8 +358,8 @@ class Reversi(TwoPlayerGame):
         return "({}, {})".format(move[1], chr(ord("a") - 1 + move[0]))
 
     def generate_successors(
-        self,
-        state: TwoPlayerGameState,
+            self,
+            state: TwoPlayerGameState,
     ) -> list[TwoPlayerGameState]:
         """Generate the list of successors of a game state."""
         successors = []
@@ -373,7 +373,7 @@ class Reversi(TwoPlayerGame):
             board_successor[move] = state.next_player.label
             # flip enemy
             for enemy in self._enemy_captured_by_move(
-                board, move, state.next_player.label
+                    board, move, state.next_player.label
             ):
                 board_successor[enemy] = state.next_player.label
             move_code = self._matrix_to_display_coordinates(move)
@@ -396,18 +396,18 @@ class Reversi(TwoPlayerGame):
         return successors
 
     def score(
-        self,
-        state: TwoPlayerGameState,
+            self,
+            state: TwoPlayerGameState,
     ) -> tuple[bool, np.ndarray | None]:
         """Determine whether a game state is terminal."""
         board = state.board
 
         end_of_game = (
-            len(
-                self._get_valid_moves(board, self.player1.label)
-                + self._get_valid_moves(board, self.player2.label)
-            )
-            == 0
+                len(
+                    self._get_valid_moves(board, self.player1.label)
+                    + self._get_valid_moves(board, self.player2.label)
+                )
+                == 0
         )
 
         scores = np.zeros(self.n_players, dtype=float)
@@ -447,12 +447,12 @@ class Reversi(TwoPlayerGame):
         return gui_buttons
 
     def gui_update(
-        self,
-        state: TwoPlayerGameState,
-        gui_buttons: dict,
-        gui_root: Tk,
-        moves: list = [],
-        click_function: Callable[[Any], None] = None,
+            self,
+            state: TwoPlayerGameState,
+            gui_buttons: dict,
+            gui_root: Tk,
+            moves: list = [],
+            click_function: Callable[[Any], None] = None,
     ) -> None:
         assert gui_buttons is not None
         assert gui_root is not None

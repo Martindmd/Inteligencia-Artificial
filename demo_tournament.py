@@ -7,7 +7,7 @@ Authors:
 
 from __future__ import annotations  # For Python 3.7
 
-import p1_1311_09_olsson_marmolejo as cringe #our heuristics
+import p1_1311_09_olsson_marmolejo as cringe  # our heuristics
 import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
@@ -49,7 +49,6 @@ class Heuristic3(StudentHeuristic):
 
 
 def create_reversi_match(player1: Player, player2: Player) -> TwoPlayerMatch:
-
     initial_board = None
     initial_player = player1
 
@@ -84,7 +83,6 @@ def create_reversi_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
 
 def create_tictactoe_match(player1: Player, player2: Player) -> TwoPlayerMatch:
-
     dim_board = 3
     initial_player = player1
 
@@ -112,7 +110,7 @@ create_match = create_reversi_match
 tour = Tournament(max_depth=3, init_match=create_match, max_evaluation_time=0.5)
 
 # if the strategies are copy-pasted here:
-strats = {"opt1": [cringe.Solution1], "opt2":[Heuristic3]}
+strats = {"opt1": [cringe.Solution1], "opt2": [cringe.Solution4]}
 # if the strategies should be loaded from files in a specific folder:
 # folder_name = "folder_strat" # name of the folder where the strategy files are located
 # strats = tour.load_strategies_from_folder(folder=folder_name, max_strat=3)
