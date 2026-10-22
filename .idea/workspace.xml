@@ -4,9 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="I'm so done with ts">
+    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="horrores incomprensibles">
+      <change afterPath="$PROJECT_DIR$/p2/data-description.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1_1311_09_olsson_marmolejo.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1_1311_09_olsson_marmolejo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_reversi.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/demo_reversi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_simple_game_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/demo_simple_game_tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_tictactoe.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/demo_tictactoe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_tournament.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/demo_tournament.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/folder_strat/strategies1.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/folder_strat/strategies1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/folder_strat/strategies2.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/folder_strat/strategies2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heuristic.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/heuristic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1_1311_09_olsson_marmolejo.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/p1_1311_09_olsson_marmolejo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reversi.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/reversi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simple_game_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/simple_game_tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/strategy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thingsWeKnow.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tictactoe.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/tictactoe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tournament.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/tournament.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/p1/util.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,8 +137,10 @@
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/UAM/3_carrera/1_cuatri/IA/Inteligencia-Artificial",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
@@ -128,6 +148,12 @@
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\UAM\3_carrera\1_cuatri\IA\Inteligencia-Artificial" />
+      <recent name="C:\UAM\3_carrera\1_cuatri\IA\Inteligencia-Artificial\p1" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Inteligencia-Artificial" />
@@ -194,7 +220,7 @@
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/search.py" />
+      <option name="SCRIPT_NAME" value="C:\UAM\3_carrera\1_cuatri\IA\Inteligencia-Artificial\p1\search.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -374,7 +400,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792656644632</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="horrores incomprensibles">
+      <option name="closed" value="true" />
+      <created>1792658658076</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1792658658076</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +430,8 @@
     <MESSAGE value="Should we put this child up for adoption" />
     <MESSAGE value="avances...." />
     <MESSAGE value="I'm so done with ts" />
-    <option name="LAST_COMMIT_MESSAGE" value="I'm so done with ts" />
+    <MESSAGE value="horrores incomprensibles" />
+    <option name="LAST_COMMIT_MESSAGE" value="horrores incomprensibles" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
@@ -405,6 +440,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Inteligencia_Artificial$demo_tournament.coverage" NAME="demo_tournament Coverage Results" MODIFIED="1792649538279" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Inteligencia_Artificial$p1_1311_09_olsson_marmolejo.coverage" NAME="p1_1311_09_olsson_marmolejo Coverage Results" MODIFIED="1792604538181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Inteligencia_Artificial$search.coverage" NAME="search Coverage Results" MODIFIED="1792656852999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Inteligencia_Artificial$search.coverage" NAME="search Coverage Results" MODIFIED="1792658877888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

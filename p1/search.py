@@ -8,9 +8,6 @@ import random
 from datetime import timedelta
 from timeit import default_timer as timer
 from treenode import TreeNode
-import numpy as np
-
-from p1_1311_09_olsson_marmolejo import Solution1, Solution2, Solution3
 
 import util
 from game import TwoPlayerGameState
@@ -140,7 +137,7 @@ class CornerReversiState:
                     else:
                         rowLine = rowLine + self.board.get(
                             (x, y),
-                            ".",
+                            "..",
                         )
                 if x == 0 and y > 0:
                     rowLine = rowLine + str(y) + " "

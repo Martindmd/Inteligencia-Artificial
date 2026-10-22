@@ -1,10 +1,10 @@
-from game import (
+from p1.game import (
     TwoPlayerGameState,
 )
-from heuristic import (
+from p1.heuristic import (
     simple_evaluation_function,
 )
-from tournament import (
+from p1.tournament import (
     StudentHeuristic,
 )
 

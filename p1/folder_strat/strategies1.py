@@ -1,7 +1,7 @@
-from game import (
+from p1.game import (
     TwoPlayerGameState,
 )
-from tournament import (
+from p1.tournament import (
     StudentHeuristic,
 )
 
