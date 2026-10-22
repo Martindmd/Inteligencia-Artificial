@@ -311,7 +311,6 @@ def depthFirstSearch(search_problem):
 
 def breadthFirstSearch(search_problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
     num_visited = 0
     structure = util.Queue()
     structure.push((search_problem.getStartState(), []))  # TODO # DEFINE THE INITIAL STATE
@@ -349,7 +348,7 @@ def simpleHeuristic(state, search_problem=None):
     return len(state.board)
 
 
-def heuristic1(state, search_problem=None):
+def heuristic1(state: CornerReversiState, search_problem=None):
     "*** YOUR CODE HERE ***"
     return 0
 
@@ -364,38 +363,33 @@ def heuristic3(state, search_problem=None):
     return 0
 
 
-def movement_cost(movements, state, search_problem=None):
-    """
-    Devuelve el número de estados / movimientos necesarios hata el goal, SUPUESTAMENTE </3
-    """
-    if search_problem.isGoalState(state):
-        return movements
-    else:
-        for successor in search_problem.getSuccessors(state):
-            successor_state = successor[0]
-            return movement_cost(movements + 1, successor_state, search_problem)
-
-
 def aStarSearch(search_problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     pq = util.PriorityQueue()
-    visited = []
+    seen = []
     state: TwoPlayerGameState = search_problem.getStartState()
-    path = []
-    pq.push((state, path), 0)
-    while search_problem.isGoalState(state) == False:
-        state, path = pq.pop()
-        if path is None:
-            path = list()
-        if state not in visited:
-            visited.append(state)
+    lil_path = []
+    pq.push((state, lil_path), 0)
+
+    while not pq.isEmpty():
+        state, lil_path = pq.pop()
+
+        if search_problem.isGoalState(state):
+            return len(seen), lil_path
+
+        if state not in seen:
+            seen.append(state)
+
             for successor in search_problem.getSuccessors(state):
                 successor_state = successor[0]
-                # Guardamos los estados accesibles y sus costes h+g
-                pq.push((successor_state, path.append(successor[1])),
-                        heuristic(successor_state, search_problem) + movement_cost(0, successor_state, search_problem))
 
-    return len(visited), path
+                if successor_state not in seen:
+                    new_path = lil_path.copy()
+                    new_path.append(successor[1])
+                    # Guardamos los estados accesibles y sus costes h+g
+                    pq.push((successor_state, new_path), heuristic(successor_state, search_problem) + len(new_path))
+
+    return len(seen), lil_path
 
 
 def createRandomReversiGeneralState(moves, h, w):
