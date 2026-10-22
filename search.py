@@ -8,6 +8,7 @@ import random
 from datetime import timedelta
 from timeit import default_timer as timer
 from treenode import TreeNode
+import numpy as np
 
 from p1_1311_09_olsson_marmolejo import Solution1, Solution2, Solution3
 
@@ -349,18 +350,60 @@ def simpleHeuristic(state, search_problem=None):
 
 
 def heuristic1(state: CornerReversiState, search_problem=None):
-    "*** YOUR CODE HERE ***"
-    return 0
+    """ Prioriza el estado con mayor número de fichas del jugador actual """
+    score = 0
+    for x in range(state.width):
+        for y in range(state.height):
+            """ Move = (x,y) """
+            x = x + 1
+            y = y + 1
+            if state.board.get((x, y)) == state.cur_player:
+                score = score + 1
+    return -score
 
 
-def heuristic2(state, search_problem=None):
-    "*** YOUR CODE HERE ***"
-    return 0
+def heuristic2(state: CornerReversiState, search_problem=None):
+    """ Prioriza el estado con mayor número de fichas cerca de las esquinas """
+    score = 0
+    BOARD = [5, 2, 1, 0, 0, 1, 2, 5,
+             2, 2, 1, 0, 0, 1, 2, 2,
+             1, 1, 1, 0, 0, 1, 1, 1,
+             0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 0, 0, 0,
+             1, 1, 1, 0, 0, 1, 1, 1,
+             2, 2, 1, 0, 0, 1, 2, 2,
+             5, 2, 1, 0, 0, 1, 2, 5]
+    for x in range(state.width):
+        for y in range(state.height):
+            """ Move = (x,y) """
+            x = x + 1
+            y = y + 1
+            if state.board.get((x, y)) == state.cur_player:
+                score = score + BOARD[(x - 1) % 8 + y - 1]
+    return -score
 
 
 def heuristic3(state, search_problem=None):
-    "*** YOUR CODE HERE ***"
-    return 0
+    """ Prioriza el estado con mayor número de fichas cerca del centro """
+    score = 0
+    BOARD = [0, 0, 0, 0, 0, 0, 0, 0,
+             0, 1, 1, 1, 1, 1, 1, 0,
+             0, 1, 2, 2, 2, 2, 1, 0,
+             0, 1, 2, 3, 3, 2, 1, 0,
+             0, 1, 2, 3, 3, 2, 1, 0,
+             0, 1, 2, 2, 2, 2, 1, 0,
+             0, 1, 1, 1, 1, 1, 1, 0,
+             0, 0, 0, 0, 0, 0, 0, 0]
+    for x in range(state.width):
+        for y in range(state.height):
+            """ Move = (x,y) """
+            x = x + 1
+            y = y + 1
+            if state.board.get((x, y)) == state.cur_player:
+                score = score + BOARD[(x - 1) % 8 + y - 1]
+            else:
+                score = score - BOARD[(x - 1) % 8 + y - 1]
+    return -score
 
 
 def aStarSearch(search_problem, heuristic=nullHeuristic):

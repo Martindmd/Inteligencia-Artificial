@@ -232,7 +232,7 @@ class MinimaxAlphaBetaStrategy(Strategy):
         # NOTE <YOUR CODE HERE>
         alpha = -np.inf
         beta = np.inf
-        minimax_value, minimax_successor = self._max_value(state, self.max_depth_minimax)
+        minimax_value, minimax_successor = self._max_value(state, self.max_depth_minimax, alpha, beta)
 
         # Use this code snippet to trace the execution of the algorithm
 
