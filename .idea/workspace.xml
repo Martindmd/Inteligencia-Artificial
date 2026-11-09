@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="mini update de los inicios">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="2 done yippie">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p2/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/README.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p2/data-description.txt" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/data-description.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p2/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p2/memoria.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/memoria.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/memoria.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/memoria.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +190,7 @@
       <workItem from="1793268283022" duration="494000" />
       <workItem from="1793268793772" duration="2262000" />
       <workItem from="1793355372228" duration="8000" />
-      <workItem from="1793983993031" duration="6846000" />
+      <workItem from="1793983993031" duration="8058000" />
     </task>
     <task id="LOCAL-00001" summary="stufff">
       <option name="closed" value="true" />
@@ -252,7 +248,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792686628984</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="2 done yippie">
+      <option name="closed" value="true" />
+      <created>1794248700971</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1794248700971</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,7 +281,8 @@
     <MESSAGE value="horrores incomprensibles" />
     <MESSAGE value="Entrega e inicios P2" />
     <MESSAGE value="mini update de los inicios" />
-    <option name="LAST_COMMIT_MESSAGE" value="mini update de los inicios" />
+    <MESSAGE value="2 done yippie" />
+    <option name="LAST_COMMIT_MESSAGE" value="2 done yippie" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
