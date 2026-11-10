@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="">
+    <list default="true" id="784d0d66-589d-4e90-ba01-106972799d81" name="Changes" comment="3 comentado">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/memoria.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/p2_1311_09_marmolejo_olsson/memoria.ipynb" afterDir="false" />
     </list>
@@ -191,7 +191,8 @@
       <workItem from="1793268793772" duration="2262000" />
       <workItem from="1793355372228" duration="8000" />
       <workItem from="1793983993031" duration="9751000" />
-      <workItem from="1794298305119" duration="2879000" />
+      <workItem from="1794298305119" duration="3828000" />
+      <workItem from="1794347531097" duration="20000" />
     </task>
     <task id="LOCAL-00001" summary="stufff">
       <option name="closed" value="true" />
@@ -265,7 +266,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794250891319</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="3 comentado">
+      <option name="closed" value="true" />
+      <created>1794345353717</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1794345353717</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +301,8 @@
     <MESSAGE value="mini update de los inicios" />
     <MESSAGE value="2 done yippie" />
     <MESSAGE value="bibliography" />
-    <option name="LAST_COMMIT_MESSAGE" value="bibliography" />
+    <MESSAGE value="3 comentado" />
+    <option name="LAST_COMMIT_MESSAGE" value="3 comentado" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

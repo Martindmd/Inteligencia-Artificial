@@ -7,7 +7,6 @@ Authors:
 import random
 from datetime import timedelta
 from timeit import default_timer as timer
-from treenode import TreeNode
 
 import util
 from game import TwoPlayerGameState
@@ -16,6 +15,7 @@ from reversi import (
     enemy_captured_by_move,
     get_valid_moves,
 )
+from treenode import TreeNode
 
 
 class CornerReversiState:
@@ -26,14 +26,14 @@ class CornerReversiState:
     """
 
     def __init__(
-            self,
-            board: dict,
-            player1="B",
-            player2="W",
-            cur_player="B",
-            height=8,
-            width=8,
-            ignore_block_cells_in_captures: bool = False,
+        self,
+        board: dict,
+        player1="B",
+        player2="W",
+        cur_player="B",
+        height=8,
+        width=8,
+        ignore_block_cells_in_captures: bool = False,
     ):
         "Creates a new CornerReversiState, very similar to Reversi."
         self.board = board
@@ -55,7 +55,7 @@ class CornerReversiState:
             self.board.get((self.width, 1)),
             self.board.get((self.width, self.height)),
         ]
-        return corners.count(self.player1) + corners.count(self.player2) >= min_corners
+        return corners.sum(self.player1) + corners.sum(self.player2) >= min_corners
 
     def legalMoves(self):
         """
@@ -85,16 +85,23 @@ class CornerReversiState:
         result_board[move] = self.cur_player
         # flip enemy
         for enemy in enemy_captured_by_move(
-                self.board,
-                move,
-                self.cur_player,
-                adversary,
-                self.blocked_cell_label,
-                self.ignore_block_cells_in_captures,
+            self.board,
+            move,
+            self.cur_player,
+            adversary,
+            self.blocked_cell_label,
+            self.ignore_block_cells_in_captures,
         ):
             result_board[enemy] = self.cur_player  # REVIEW  # update the board
-        result_state = CornerReversiState(result_board, self.player1, self.player2, adversary, self.height, self.width,
-                                          self.ignore_block_cells_in_captures)
+        result_state = CornerReversiState(
+            result_board,
+            self.player1,
+            self.player2,
+            adversary,
+            self.height,
+            self.width,
+            self.ignore_block_cells_in_captures,
+        )
         return result_state  # REVIEW  # RETURN THE NEW STATE CONSIDERING THE UPDATES
 
     # Utilities for comparison and display
@@ -240,15 +247,19 @@ def build_game_tree(search_problem, max_depth):
         "max_depth": 0,
         "branching_sum": 0,
         "internal_nodes": 0,
-        "ramification": 0
+        "ramification": 0,
     }
 
     """YOUR CODE HERE"""  # TODO
     current_state = search_problem.getStartState()
     tree = TreeNode(current_state)
 
-    def recursive_nodes(current_depth: int, current_node: TreeNode, actual_state: CornerReversiState,
-                        current_problem: CornerReversiSearchProblem):
+    def recursive_nodes(
+        current_depth: int,
+        current_node: TreeNode,
+        actual_state: CornerReversiState,
+        current_problem: CornerReversiSearchProblem,
+    ):
         if current_depth == max_depth:
             return
         else:
@@ -256,14 +267,19 @@ def build_game_tree(search_problem, max_depth):
                 if current_depth == max_depth - 1:
                     stats["leaves"] = stats["leaves"] + 1
                 new_problem = CornerReversiSearchProblem(state[0])
-                recursive_nodes(current_depth + 1, current_node.add_child(state[0]), state[0], new_problem)
+                recursive_nodes(
+                    current_depth + 1,
+                    current_node.add_child(state[0]),
+                    state[0],
+                    new_problem,
+                )
 
     recursive_nodes(0, tree, current_state, search_problem)
 
-    stats["nodes"] = tree.count_folders() + tree.count_files()
+    stats["nodes"] = tree.sum_folders() + tree.sum_files()
     stats["max_depth"] = max_depth
     stats["branching_sum"] = stats["nodes"] - 1
-    stats["internal_nodes"] = tree.count_folders() - stats["leaves"]
+    stats["internal_nodes"] = tree.sum_folders() - stats["leaves"]
     stats["ramification"] = stats["branching_sum"] / stats["internal_nodes"]
     return tree, stats
 
@@ -285,7 +301,9 @@ def depthFirstSearch(search_problem):
 
     num_visited = 0
     structure = util.Stack()
-    structure.push((search_problem.getStartState(), []))  # TODO # DEFINE THE INITIAL STATE
+    structure.push(
+        (search_problem.getStartState(), [])
+    )  # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
@@ -311,7 +329,9 @@ def breadthFirstSearch(search_problem):
     """Search the shallowest nodes in the search tree first."""
     num_visited = 0
     structure = util.Queue()
-    structure.push((search_problem.getStartState(), []))  # TODO # DEFINE THE INITIAL STATE
+    structure.push(
+        (search_problem.getStartState(), [])
+    )  # TODO # DEFINE THE INITIAL STATE
     visited = []
 
     while not structure.isEmpty():
@@ -347,7 +367,7 @@ def simpleHeuristic(state, search_problem=None):
 
 
 def heuristic1(state: CornerReversiState, search_problem=None):
-    """ Prioriza el estado con mayor número de fichas del jugador actual """
+    """Prioriza el estado con mayor número de fichas del jugador actual"""
     score = 0
     for x in range(state.width):
         for y in range(state.height):
@@ -360,16 +380,74 @@ def heuristic1(state: CornerReversiState, search_problem=None):
 
 
 def heuristic2(state: CornerReversiState, search_problem=None):
-    """ Prioriza el estado con mayor número de fichas cerca de las esquinas """
+    """Prioriza el estado con mayor número de fichas cerca de las esquinas"""
     score = 0
-    BOARD = [5, 2, 1, 0, 0, 1, 2, 5,
-             2, 2, 1, 0, 0, 1, 2, 2,
-             1, 1, 1, 0, 0, 1, 1, 1,
-             0, 0, 0, 0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0, 0, 0, 0,
-             1, 1, 1, 0, 0, 1, 1, 1,
-             2, 2, 1, 0, 0, 1, 2, 2,
-             5, 2, 1, 0, 0, 1, 2, 5]
+    BOARD = [
+        5,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        5,
+        2,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        5,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        5,
+    ]
     for x in range(state.width):
         for y in range(state.height):
             """ Move = (x,y) """
@@ -381,16 +459,74 @@ def heuristic2(state: CornerReversiState, search_problem=None):
 
 
 def heuristic3(state, search_problem=None):
-    """ Prioriza el estado con mayor número de fichas cerca del centro """
+    """Prioriza el estado con mayor número de fichas cerca del centro"""
     score = 0
-    BOARD = [0, 0, 0, 0, 0, 0, 0, 0,
-             0, 1, 1, 1, 1, 1, 1, 0,
-             0, 1, 2, 2, 2, 2, 1, 0,
-             0, 1, 2, 3, 3, 2, 1, 0,
-             0, 1, 2, 3, 3, 2, 1, 0,
-             0, 1, 2, 2, 2, 2, 1, 0,
-             0, 1, 1, 1, 1, 1, 1, 0,
-             0, 0, 0, 0, 0, 0, 0, 0]
+    BOARD = [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        3,
+        3,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        3,
+        3,
+        2,
+        1,
+        0,
+        0,
+        1,
+        2,
+        2,
+        2,
+        2,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ]
     for x in range(state.width):
         for y in range(state.height):
             """ Move = (x,y) """
@@ -427,7 +563,10 @@ def aStarSearch(search_problem, heuristic=nullHeuristic):
                     new_path = lil_path.copy()
                     new_path.append(successor[1])
                     # Guardamos los estados accesibles y sus costes h+g
-                    pq.push((successor_state, new_path), heuristic(successor_state, search_problem) + len(new_path))
+                    pq.push(
+                        (successor_state, new_path),
+                        heuristic(successor_state, search_problem) + len(new_path),
+                    )
 
     return len(seen), lil_path
 

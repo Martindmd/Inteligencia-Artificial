@@ -69,12 +69,12 @@ class PriorityQueue:
 
     def __init__(self):
         self.heap = []
-        self.count = 0
+        self.sum = 0
 
     def push(self, item, priority):
-        entry = (priority, self.count, item)
+        entry = (priority, self.sum, item)
         heapq.heappush(self.heap, entry)
-        self.count += 1
+        self.sum += 1
 
     def pop(self):
         (_, _, item) = heapq.heappop(self.heap)
